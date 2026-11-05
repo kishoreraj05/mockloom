@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any
 from urllib.parse import parse_qsl
@@ -11,6 +12,9 @@ from .compiler import CompiledParam, CompiledRoute, MediaType
 from .limits import MAX_VALIDATION_ERRORS
 from .rules import RequestView
 from .schema import SchemaContext, collect_errors
+
+_INTEGER = re.compile(r"-?[0-9]+")
+_NUMBER = re.compile(r"-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?")
 
 # OpenAPI: header parameters with these names are ignored, since HTTP itself governs them.
 _IGNORED_HEADERS = {"accept", "content-type", "authorization"}
@@ -51,16 +55,11 @@ def media_matches(declared: str, actual: str) -> bool:
 def _coerce_scalar(value: str, types: set[str]) -> Any:
     if "string" in types or not types:
         return value
-    if "integer" in types:
-        try:
-            return int(value)
-        except ValueError:
-            pass
-    if "number" in types:
-        try:
-            return float(value)
-        except ValueError:
-            pass
+    # Not int() and float(): they also accept " 42", "42\\n", "1_000", "nan" and "inf".
+    if "integer" in types and _INTEGER.fullmatch(value):
+        return int(value)
+    if "number" in types and _NUMBER.fullmatch(value):
+        return float(value)
     if "boolean" in types and value.lower() in ("true", "false"):
         return value.lower() == "true"
     if "null" in types and value in ("", "null"):

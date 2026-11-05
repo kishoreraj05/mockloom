@@ -93,6 +93,19 @@ class TestValidation:
     def test_int64_bounds(self, petstore, value, status):
         assert MockEngine(petstore).handle(get(f"/pets/{value}")).status == status
 
+    @pytest.mark.parametrize("value", ["42\n", " 42", "4_2", "٤٢", "1e3", "+1"])
+    def test_loose_integers_are_rejected(self, petstore, value):
+        assert MockEngine(petstore).handle(get(f"/pets/{value}")).status == 400
+
+    @pytest.mark.parametrize("value, status", [("1.5", 200), ("-2e3", 200), ("nan", 400), ("inf", 400), ("1_0", 400)])
+    def test_numbers(self, value, status):
+        spec = compile_spec(
+            "openapi: 3.0.3\ninfo: {title: T, version: '1'}\npaths:\n  /x:\n    get:\n"
+            "      parameters:\n        - {name: n, in: query, schema: {type: number}}\n"
+            "      responses: {'200': {description: ok}}\n"
+        )
+        assert MockEngine(spec).handle(get("/x", query=[("n", value)])).status == status
+
     def test_valid_requests_pass(self, petstore):
         engine = MockEngine(petstore)
         assert engine.handle(get("/pets", query=[("limit", "5"), ("status", "sold")])).status == 200

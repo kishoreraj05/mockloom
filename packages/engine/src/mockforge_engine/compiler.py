@@ -97,7 +97,7 @@ def _compile_template(template: str) -> tuple[re.Pattern[str], list[str], tuple[
         pattern += re.escape(template[cursor : match.start()]) + "([^/]+)"
         names.append(match.group(1))
         cursor = match.end()
-    pattern += re.escape(template[cursor:]) + "$"
+    pattern += re.escape(template[cursor:]) + r"\Z"  # `$` would also match before a trailing newline.
     # Compared segment by segment: 0 (static) sorts before 1 (parameter), so /users/me beats
     # /users/{id}, and /a/{x}/c beats /a/{x}/{y}.
     segments = template.strip("/").split("/")

@@ -32,6 +32,7 @@ There are four [examples](examples) to try and copy from, each with ready-made r
 | **Validation** | Requests that break the spec get a 400 in RFC 7807 problem JSON. Can be turned off per workspace. |
 | **Live log** | Every call with its matched rule and response, streamed to the browser. Turn any request into a rule. |
 | **Chaos** | Latency, error rate, forced status and dropped connections, globally or per route. |
+| **Use in your app** | Every route shows its absolute URL, with copyable cURL, JavaScript and Python requests using dummy values that pass validation, plus an example response and an example request for each rule. |
 
 Keyboard: `/` search routes, `n` new rule, `l` focus the log.
 

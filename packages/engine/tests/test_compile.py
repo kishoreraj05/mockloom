@@ -29,6 +29,11 @@ def test_route_matching(petstore, path, expected, params):
     assert match.path_params == params
 
 
+def test_trailing_newline_is_not_ignored(petstore):
+    assert petstore.match("GET", "/pets/mine\n").route.template == "/pets/{id}"
+    assert petstore.match("GET", "/pets\n").route is None
+
+
 def test_static_segment_priority_is_positional():
     spec = compile_spec(
         minimal(

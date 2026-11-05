@@ -242,6 +242,13 @@ class TestMockHttp:
         response = client.get(f"/api/workspaces/{workspace}", headers={"origin": "https://evil.example"})
         assert "access-control-allow-origin" not in response.headers
 
+    def test_url_with_a_newline_still_reaches_the_mock(self, client, workspace):
+        response = client.get(f"/mock/{workspace}/pets/abc%0Ad")
+        assert response.status_code == 400 and response.json()["title"] == "Request does not match the spec"
+        assert "access-control-allow-origin" in client.get(f"/mock/{workspace}/nope%0Ax").headers
+        paths = [entry["path"] for entry in client.get(f"/api/workspaces/{workspace}/logs").json()]
+        assert "/pets/abc\nd" in paths
+
     def test_unknown_workspace(self, client):
         assert client.get("/mock/no-such-workspace/x").json()["title"] == "No such workspace"
 

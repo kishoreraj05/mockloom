@@ -13,8 +13,19 @@ from typing import Any
 from fastapi import APIRouter, Request, Response
 from mockforge_engine import RawRequest
 from mockforge_engine.limits import MAX_REQUEST_BYTES
+from starlette.convertors import PathConvertor, register_url_convertor
 
 router = APIRouter()
+
+
+class _AnyPath(PathConvertor):
+    """Starlette's `path` is `.*`, which can't cross a newline. A request for a URL containing %0A
+    would miss the mock altogether, and get no log entry and no CORS headers."""
+
+    regex = "(?s:.*)"
+
+
+register_url_convertor("mockpath", _AnyPath())
 
 _METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD", "TRACE"]
 _REDACTED_HEADERS = {"authorization", "proxy-authorization", "cookie", "x-api-key"}
@@ -123,7 +134,7 @@ def _entry(
 
 
 @router.api_route("/mock/{workspace}", methods=_METHODS, include_in_schema=False)
-@router.api_route("/mock/{workspace}/{path:path}", methods=_METHODS, include_in_schema=False)
+@router.api_route("/mock/{workspace}/{path:mockpath}", methods=_METHODS, include_in_schema=False)
 async def serve_mock(request: Request, workspace: str, path: str = "") -> Response:
     started = time.perf_counter()
     state = request.app.state
