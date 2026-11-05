@@ -62,6 +62,19 @@ class LogHub:
                 ring.extendleft(reversed(older[-room:]))
         return list(ring)[-limit:]
 
+    def older(self, workspace_id: str, before: dt.datetime, limit: int) -> list[dict[str, Any]]:
+        """Rows older than a moment, oldest first. Beyond the ring, only the database has them."""
+        if before.tzinfo is None:
+            before = before.replace(tzinfo=dt.UTC)
+        with self.sessions() as session:
+            rows = session.scalars(
+                select(RequestLog)
+                .where(RequestLog.workspace_id == workspace_id, RequestLog.ts < before.astimezone(dt.UTC))
+                .order_by(RequestLog.ts.desc())
+                .limit(limit)
+            ).all()
+        return [_row_to_entry(row) for row in reversed(rows)]
+
     def _load_from_db(self, workspace_id: str) -> list[dict[str, Any]]:
         with self.sessions() as session:
             rows = session.scalars(
@@ -183,7 +196,9 @@ def _row_to_entry(row: RequestLog) -> dict[str, Any]:
     return {
         "id": row.id,
         "workspace_id": row.workspace_id,
-        "ts": row.ts,
+        # SQLite hands datetimes back without a timezone. They are always UTC, and without saying so
+        # browsers would read them as local time.
+        "ts": row.ts if row.ts.tzinfo else row.ts.replace(tzinfo=dt.UTC),
         "method": row.method,
         "path": row.path,
         "status": row.status,

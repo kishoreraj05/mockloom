@@ -1247,6 +1247,8 @@ export interface operations {
         parameters: {
             query?: {
                 limit?: number;
+                /** @description Only rows older than this, for paging back. */
+                before?: string | null;
             };
             header?: never;
             path: {

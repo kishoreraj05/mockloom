@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import difflib
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -105,6 +104,11 @@ def _compile_template(template: str) -> tuple[re.Pattern[str], list[str], tuple[
     return re.compile(pattern), names, tuple(1 if "{" in s else 0 for s in segments)
 
 
+def _bigrams(path: str) -> frozenset[str]:
+    text = _PARAM.sub("", path).lower()
+    return frozenset(text[i : i + 2] for i in range(len(text) - 1))
+
+
 def _segment_count(path: str) -> int:
     return len(path.strip("/").split("/"))
 
@@ -118,10 +122,10 @@ class CompiledSpec:
         self.version = str(doc.get("openapi"))
         self.routes: dict[str, CompiledRoute] = {}
         self._by_segments: dict[int, list[_PathEntry]] = {}
-        self._templates: list[str] = []
+        self._bigrams: dict[str, frozenset[str]] = {}
 
     def _add(self, entry: _PathEntry) -> None:
-        self._templates.append(entry.template)
+        self._bigrams[entry.template] = _bigrams(entry.template)
         self._by_segments.setdefault(_segment_count(entry.template), []).append(entry)
         for route in entry.operations.values():
             self.routes[route.key] = route
@@ -148,7 +152,19 @@ class CompiledSpec:
         return RouteMatch(None, {}, allowed)
 
     def closest_routes(self, path: str, limit: int = 5) -> list[str]:
-        return difflib.get_close_matches(path, self._templates, n=limit, cutoff=0.3)
+        """Similar templates, for 404 messages. Runs on the event loop that serves every mock, so it
+        compares precomputed sets: difflib took about 60 ms per miss on a 450-route spec."""
+        wanted = _bigrams(path)
+        if not wanted:
+            return []
+        scored = []
+        for template, grams in self._bigrams.items():
+            shared = len(wanted & grams)
+            if shared:
+                score = shared / (len(wanted) + len(grams) - shared)
+                if score >= 0.2:
+                    scored.append((-score, template))
+        return [template for _, template in sorted(scored)[:limit]]
 
 
 def _compile_media(

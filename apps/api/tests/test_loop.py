@@ -70,8 +70,10 @@ def test_logs_reach_the_database_and_survive_restart(settings, petstore_text):
         first.get(f"/mock/{slug}/pets")
     with TestClient(create_app(settings)) as second:
         assert second.get(f"/mock/{slug}/pets/1").status_code == 200  # spec reloaded from storage
-        paths = [entry["path"] for entry in second.get(f"/api/workspaces/{slug}/logs").json()]
-        assert "/pets" in paths
+        entries = second.get(f"/api/workspaces/{slug}/logs").json()
+        assert "/pets" in [entry["path"] for entry in entries]
+        # Browsers read a timestamp with no timezone as local time, so the clock would be wrong.
+        assert all(entry["ts"].endswith(("Z", "+00:00")) for entry in entries)
         second.delete(f"/api/workspaces/{slug}")
 
 
@@ -105,3 +107,55 @@ def test_stream_does_not_lose_rows_under_load(client, workspace):
             received.extend(socket.receive_json())
     assert [entry["path"] for entry in received] == [f"/pets/{index}" for index in range(300)]
     assert received[0]["ts"].endswith(("Z", "+00:00"))
+
+
+def test_paging_back_past_the_ring_buffer(settings, petstore_text):
+    from dataclasses import replace
+
+    from fastapi.testclient import TestClient
+    from mockforge_api.main import create_app
+
+    slug = f"paging-{time.time_ns()}"
+    with TestClient(create_app(replace(settings, log_ring_size=5))) as client:
+        client.post("/api/workspaces", json={"name": "P", "slug": slug, "spec_text": petstore_text})
+        for index in range(12):
+            client.get(f"/mock/{slug}/pets/{index}")
+        time.sleep(0.2)  # Let the batched writer reach the database.
+
+        url = f"/api/workspaces/{slug}/logs"
+        latest = client.get(url).json()
+        assert [e["path"] for e in latest] == [f"/pets/{i}" for i in range(7, 12)]
+
+        page = client.get(url, params={"before": latest[0]["ts"], "limit": 4}).json()
+        assert [e["path"] for e in page] == [f"/pets/{i}" for i in range(3, 7)]
+
+        last = client.get(url, params={"before": page[0]["ts"], "limit": 4}).json()
+        assert [e["path"] for e in last] == [f"/pets/{i}" for i in range(0, 3)]
+        client.delete(f"/api/workspaces/{slug}")
+
+
+def test_workspaces_with_the_same_name_created_at_once_all_succeed(settings):
+    from concurrent.futures import ThreadPoolExecutor
+
+    import httpx
+    from fastapi.testclient import TestClient
+    from mockforge_api.main import create_app
+
+    from .conftest import serve
+
+    app = create_app(settings)
+    name = f"Race {time.time_ns()}"
+    with TestClient(app):
+        pass
+    with serve(app) as url:
+
+        def create(_):
+            return httpx.post(f"{url}/api/workspaces", json={"name": name}, timeout=30)
+
+        with ThreadPoolExecutor(8) as pool:
+            responses = list(pool.map(create, range(8)))
+        assert [r.status_code for r in responses] == [201] * 8, [r.text for r in responses]
+        slugs = {r.json()["slug"] for r in responses}
+        assert len(slugs) == 8
+        for slug in slugs:
+            httpx.delete(f"{url}/api/workspaces/{slug}")

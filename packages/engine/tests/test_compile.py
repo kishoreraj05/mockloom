@@ -55,6 +55,13 @@ def test_method_mismatch_reports_allowed(petstore):
     assert match.route is None and set(match.allowed_methods) == {"GET", "POST"}
 
 
+def test_closest_routes_suggests_likely_typos(petstore):
+    assert petstore.closest_routes("/pet")[0] == "/pets"
+    assert "/store/inventory" in petstore.closest_routes("/store/inventry")
+    assert petstore.closest_routes("/zzzzzz") == []
+    assert petstore.closest_routes("/") == []
+
+
 def test_path_level_parameters_are_inherited_and_overridable(petstore):
     assert [p.name for p in petstore.routes["GET /pets/{id}"].params] == ["id"]
     spec = compile_spec(

@@ -876,6 +876,25 @@
               "default": 1000,
               "title": "Limit"
             }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only rows older than this, for paging back.",
+              "title": "Before"
+            },
+            "description": "Only rows older than this, for paging back."
           }
         ],
         "responses": {

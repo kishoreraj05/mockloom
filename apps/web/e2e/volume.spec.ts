@@ -27,4 +27,14 @@ test('the log holds 10,000 rows with only a screenful in the DOM', async ({ page
   await page.getByLabel('Filter requests').fill('/pets/9999');
   await expect(list.getByRole('button')).toHaveCount(1);
   expect(Date.now() - started).toBeLessThan(1000);
+
+  // A reload starts from the newest 1,000 rows; the rest are a click away.
+  await page.getByLabel('Filter requests').fill('');
+  await page.waitForTimeout(1000); // Let the batched writer reach the database.
+  await page.reload();
+  await expect(page.getByText('1000', { exact: true })).toBeVisible({ timeout: 15_000 });
+  const scroller = page.getByTestId('log-rows');
+  await scroller.evaluate((element) => element.scrollTo(0, 0));
+  await page.getByRole('button', { name: 'Load older requests' }).click();
+  await expect(page.getByText('2000', { exact: true })).toBeVisible({ timeout: 15_000 });
 });

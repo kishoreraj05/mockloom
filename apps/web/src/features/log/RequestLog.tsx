@@ -7,13 +7,14 @@ import { MethodBadge } from '@/components/MethodBadge';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/fields';
-import { matchesFilter } from '@/lib/log';
+import { matchesFilter, MAX_ROWS } from '@/lib/log';
 import { draftFromLog } from '@/lib/rules';
 import { cn, formatClock, prettyJson, statusTone } from '@/lib/utils';
 import { useUi } from '@/store/ui';
 
 const ROW_HEIGHT = 26;
 const FLUSH_MS = 60;
+const PAGE_SIZE = 1000;
 
 function useLogStream(slug: string) {
   const addRows = useUi((state) => state.addLogRows);
@@ -139,12 +140,15 @@ export function RequestLog({
   const selectedId = useUi((state) => state.selectedLogId);
   const select = useUi((state) => state.selectLog);
   const clearRows = useUi((state) => state.clearLogRows);
+  const addRows = useUi((state) => state.addLogRows);
   const setDraft = useUi((state) => state.setDraft);
   const toast = useUi((state) => state.toast);
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState('');
   const [confirming, setConfirming] = useState(false);
   const [following, setFollowing] = useState(true);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [reachedStart, setReachedStart] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
 
   const visible = useMemo(() => rows.filter((row) => matchesFilter(row, filter)), [rows, filter]);
@@ -163,10 +167,29 @@ export function RequestLog({
 
   const selected = selectedId ? rows.find((row) => row.id === selectedId) : undefined;
 
+  async function loadOlder() {
+    setLoadingOlder(true);
+    setFollowing(false);
+    try {
+      const page = await unwrap(
+        api.GET('/api/workspaces/{slug}/logs', {
+          params: { path: { slug }, query: { before: rows[0].ts, limit: PAGE_SIZE } },
+        }),
+      );
+      addRows(page);
+      if (page.length < PAGE_SIZE) setReachedStart(true);
+    } catch (cause) {
+      toast(cause instanceof Error ? cause.message : 'Could not load older requests.', 'bad');
+    } finally {
+      setLoadingOlder(false);
+    }
+  }
+
   async function clearLog() {
     try {
       await unwrap(api.DELETE('/api/workspaces/{slug}/logs', { params: { path: { slug } } }));
       clearRows();
+      setReachedStart(false);
       void queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
     } catch (cause) {
       toast(cause instanceof Error ? cause.message : 'Could not clear the log.', 'bad');
@@ -219,6 +242,13 @@ export function RequestLog({
             setFollowing(element.scrollHeight - element.scrollTop - element.clientHeight < ROW_HEIGHT * 2);
           }}
         >
+          {rows.length >= PAGE_SIZE && rows.length < MAX_ROWS && !reachedStart && (
+            <div className="border-b border-line p-1 text-center">
+              <Button size="sm" variant="ghost" disabled={loadingOlder} onClick={() => void loadOlder()}>
+                {loadingOlder ? 'Loading…' : 'Load older requests'}
+              </Button>
+            </div>
+          )}
           {visible.length === 0 && (
             <p className="p-4 text-center text-muted">
               {rows.length ? 'No requests match this filter.' : 'Waiting for requests. Call the mock URL, or use Try it.'}

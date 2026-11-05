@@ -7,6 +7,7 @@ import datetime as dt
 import hashlib
 import json
 import re
+from secrets import token_hex
 from typing import Any
 from urllib.parse import urlparse
 
@@ -26,6 +27,7 @@ from ..models import ChaosRow, RuleRow, SpecVersion, Workspace, new_id
 router = APIRouter(prefix="/api")
 
 _STREAM_BATCH = 500
+_SLUG_ATTEMPTS = 5
 
 
 def _json_default(value: Any) -> str:
@@ -157,21 +159,28 @@ def create_workspace(
             raise HTTPException(422, f"Rule '{rule.name}': no route '{rule.route}' in the spec")
     if body.slug and session.scalar(select(Workspace.id).where(Workspace.slug == body.slug)):
         raise HTTPException(409, f"The slug '{body.slug}' is already in use")
-    workspace = Workspace(
-        id=new_id(),
-        slug=body.slug or _unique_slug(session, _slugify(body.name)),
-        name=body.name,
-    )
-    session.add(workspace)
-    try:
-        session.flush()
-        if report is not None:
-            _store_spec(session, workspace, body.spec_text, report)
-        session.add_all(RuleRow(id=new_id(), workspace_id=workspace.id, **_rule_values(r)) for r in body.rules)
-        session.commit()
-    except IntegrityError as exc:
-        session.rollback()
-        raise HTTPException(409, "That slug was just taken; try again") from exc
+    # Two creates with the same name can pick the same free slug. A slug we chose can simply be
+    # chosen again, but one the caller asked for is theirs to change. Retries add a random suffix,
+    # because concurrent creates would otherwise keep colliding on the same next free slug.
+    base_slug = _slugify(body.name)
+    for attempt in range(_SLUG_ATTEMPTS):
+        workspace = Workspace(
+            id=new_id(),
+            slug=body.slug or _unique_slug(session, base_slug if attempt == 0 else f"{base_slug}-{token_hex(2)}"),
+            name=body.name,
+        )
+        session.add(workspace)
+        try:
+            session.flush()
+            if report is not None:
+                _store_spec(session, workspace, body.spec_text, report)
+            session.add_all(RuleRow(id=new_id(), workspace_id=workspace.id, **_rule_values(r)) for r in body.rules)
+            session.commit()
+            break
+        except IntegrityError as exc:
+            session.rollback()
+            if body.slug or attempt == _SLUG_ATTEMPTS - 1:
+                raise HTTPException(409, "That slug was just taken; try again") from exc
     request.app.state.runtimes.invalidate(workspace.slug)
     return _workspace_out(session, request, workspace)
 
@@ -551,10 +560,13 @@ def list_logs(
     slug: str,
     request: Request,
     limit: int = Query(default=1000, ge=1, le=1000),
+    before: dt.datetime | None = Query(default=None, description="Only rows older than this, for paging back."),
     session: Session = Depends(get_session),
 ):
     workspace = _workspace(session, slug)
-    return [public_entry(e) for e in request.app.state.logs.recent(workspace.id, limit)]
+    logs = request.app.state.logs
+    rows = logs.older(workspace.id, before, limit) if before else logs.recent(workspace.id, limit)
+    return [public_entry(e) for e in rows]
 
 
 @router.delete("/workspaces/{slug}/logs", status_code=204)

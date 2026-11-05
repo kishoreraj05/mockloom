@@ -9,9 +9,9 @@ MAX_DELAY_MS = 60_000
 # How many times one $ref may repeat along a single generation path before we stop descending.
 MAX_CIRCULAR_REF_DEPTH = 5
 # Beyond this many nested $refs, only required properties are generated.
-MAX_OPTIONAL_REF_DEPTH = 4
+MAX_OPTIONAL_REF_DEPTH = 3
 # Total schema nodes visited for one generated response, so wide cyclic graphs stay cheap.
-GENERATION_NODE_BUDGET = 4_000
+GENERATION_NODE_BUDGET = 2_000
 
 REGEX_TIMEOUT_SECONDS = 0.05
 MAX_VALIDATION_ERRORS = 20

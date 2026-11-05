@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import statistics
 import sys
 import tempfile
@@ -36,7 +37,7 @@ async def measure(client: httpx.AsyncClient, make_request) -> list[float]:
             started = time.perf_counter()
             response = await make_request(client, index)
             timings.append((time.perf_counter() - started) * 1000)
-            assert response.status_code < 500, response.text
+            assert response.status_code < 500, response.text[:300]
 
     await asyncio.gather(*(worker() for _ in range(CONCURRENCY)))
     return sorted(timings[REQUESTS // 10 :])  # The first requests warm the caches.
@@ -44,6 +45,44 @@ async def measure(client: httpx.AsyncClient, make_request) -> list[float]:
 
 def p95(values: list[float]) -> float:
     return values[int(len(values) * 0.95)]
+
+
+async def run_big_spec(base: str) -> None:
+    """A real 400+ route spec, where cold generation and route matching are at their most expensive."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from fetch_corpus import MANIFEST, SPECS, filename
+
+    item = next((i for i in json.loads(MANIFEST.read_text()) if i["name"] == "stripe.com"), None)
+    path = SPECS / filename(item) if item else None
+    if path is None or not path.exists():
+        print("\nBig spec skipped: run scripts/fetch_corpus.py first.")
+        return
+    async with httpx.AsyncClient(base_url=base, timeout=120) as client:
+        started = time.perf_counter()
+        response = await client.post(
+            "/api/workspaces", json={"name": "Big", "slug": "big", "spec_text": path.read_text()}
+        )
+        assert response.status_code == 201, response.text
+        print(f"\nBig spec ({path.stat().st_size // 1024} KB, {response.json()['route_count']} routes)")
+        print(f"Upload to ready: {time.perf_counter() - started:.2f} s")
+        routes = (await client.get("/api/workspaces/big/routes")).json()
+        gets = [r["path"] for r in routes if r["method"] == "GET" and "{" in r["path"]]
+        print(f"{'scenario':<34}{'p50 ms':>9}{'p95 ms':>9}{'added p95':>11}")
+        baseline = p95(await measure(client, lambda c, i: c.get("/__baseline")))
+        print(f"{'baseline: bare endpoint':<34}{'':>9}{baseline:>9.2f}{0:>11.2f}")
+
+        def fill(template: str, index: int) -> str:
+            return re.sub(r"\{[^}]+\}", f"id{index}", template)
+
+        scenarios = {
+            "new URL every time (cold)": lambda c, i: c.get(f"/mock/big{fill(gets[i % len(gets)], i)}"),
+            "same 50 URLs (cached)": lambda c, i: c.get(f"/mock/big{fill(gets[i % 50], 0)}"),
+            "no matching route (404)": lambda c, i: c.get(f"/mock/big/v1/nothing/here/{i}"),
+        }
+        for name, request in scenarios.items():
+            values = await measure(client, request)
+            added = p95(values) - baseline
+            print(f"{name:<34}{statistics.median(values):>9.2f}{p95(values):>9.2f}{added:>11.2f}")
 
 
 async def run(base: str, slug: str) -> None:
@@ -98,6 +137,7 @@ def main() -> int:
         )
         assert created.status_code == 201, created.text
         asyncio.run(run("http://127.0.0.1:18790", "bench"))
+        asyncio.run(run_big_spec("http://127.0.0.1:18790"))
         server.should_exit = True
         thread.join(timeout=5)
     return 0
