@@ -1,0 +1,221 @@
+# Failure handling: declined cards, conflicts, rate limits and slow processors.
+openapi: 3.0.3
+info:
+  title: Payments API
+  version: 1.0.0
+  description: A fictional payments API. Good for testing checkout flows and their error states.
+tags:
+  - name: charges
+  - name: customers
+  - name: account
+security:
+  - apiKey: []
+paths:
+  /balance:
+    get:
+      tags: [account]
+      summary: Get the account balance
+      operationId: getBalance
+      responses:
+        "200":
+          description: Current balance
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [available, currency]
+                properties:
+                  available: { type: integer, minimum: 0, description: In the smallest currency unit. }
+                  currency: { $ref: "#/components/schemas/Currency" }
+        "401":
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /customers:
+    get:
+      tags: [customers]
+      summary: List customers
+      operationId: listCustomers
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100 }
+        - name: starting_after
+          in: query
+          description: Cursor for the next page.
+          schema: { type: string }
+      responses:
+        "200":
+          description: A page of customers
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, has_more]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Customer" }
+                  has_more: { type: boolean }
+        "429":
+          description: Too many requests
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+    post:
+      tags: [customers]
+      summary: Create a customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+                name: { type: string }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Customer" }
+  /customers/{customerId}:
+    get:
+      tags: [customers]
+      summary: Get a customer
+      operationId: getCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema: { type: string, pattern: "^cus_[a-zA-Z0-9]+$" }
+      responses:
+        "200":
+          description: One customer
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Customer" }
+        "404":
+          description: No such customer
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /charges:
+    post:
+      tags: [charges]
+      summary: Charge a payment source
+      operationId: createCharge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount, currency, source]
+              properties:
+                amount: { type: integer, minimum: 50, description: In the smallest currency unit. }
+                currency: { $ref: "#/components/schemas/Currency" }
+                source: { type: string, description: A payment token. }
+                description: { type: string }
+            example: { amount: 2500, currency: usd, source: tok_visa, description: Order 1042 }
+      responses:
+        "201":
+          description: Charged
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Charge" }
+        "402":
+          description: The payment failed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /charges/{chargeId}:
+    get:
+      tags: [charges]
+      summary: Get a charge
+      operationId: getCharge
+      parameters:
+        - name: chargeId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: One charge
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Charge" }
+  /refunds:
+    post:
+      tags: [charges]
+      summary: Refund a charge
+      operationId: createRefund
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [charge]
+              properties:
+                charge: { type: string }
+                amount: { type: integer, minimum: 1 }
+            example: { charge: ch_1042 }
+      responses:
+        "201":
+          description: Refunded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, charge, status]
+                properties:
+                  id: { type: string, pattern: "^re_[a-z0-9]{10}$" }
+                  charge: { type: string }
+                  status: { type: string, enum: [pending, succeeded] }
+        "409":
+          description: Already refunded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+  schemas:
+    Currency:
+      type: string
+      enum: [usd, eur, gbp, inr]
+    Customer:
+      type: object
+      required: [id, email, created]
+      properties:
+        id: { type: string, pattern: "^cus_[a-z0-9]{10}$" }
+        email: { type: string, format: email }
+        name: { type: string, nullable: true }
+        created: { type: string, format: date-time }
+    Charge:
+      type: object
+      required: [id, amount, currency, status]
+      properties:
+        id: { type: string, pattern: "^ch_[a-z0-9]{10}$" }
+        amount: { type: integer, minimum: 50 }
+        currency: { $ref: "#/components/schemas/Currency" }
+        status: { type: string, enum: [pending, succeeded, failed] }
+        description: { type: string, nullable: true }
+        created: { type: string, format: date-time }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }

@@ -1,0 +1,16 @@
+{
+  "name": "Successful charge",
+  "route": "POST /charges",
+  "priority": 50,
+  "then": {
+    "status": 201,
+    "body": {
+      "id": "ch_success000",
+      "amount": "{{request.body.amount}}",
+      "currency": "{{request.body.currency}}",
+      "status": "succeeded",
+      "description": "{{request.body.description}}",
+      "created": "{{now}}"
+    }
+  }
+}

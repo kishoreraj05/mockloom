@@ -1,0 +1,23 @@
+{
+  "name": "Admins can delete anything",
+  "route": "DELETE /pets/{id}",
+  "priority": 10,
+  "when": {
+    "any": [
+      {
+        "source": "cookie",
+        "field": "role",
+        "op": "eq",
+        "value": "admin"
+      },
+      {
+        "source": "header",
+        "field": "x-admin",
+        "op": "exists"
+      }
+    ]
+  },
+  "then": {
+    "status": 204
+  }
+}

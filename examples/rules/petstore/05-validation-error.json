@@ -1,0 +1,21 @@
+{
+  "name": "Duplicate name is rejected",
+  "route": "POST /pets",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.name",
+        "op": "regex",
+        "value": "^(?i)rex$"
+      }
+    ]
+  },
+  "then": {
+    "status": 400,
+    "body": {
+      "message": "A pet named {{request.body.name}} already exists"
+    }
+  }
+}

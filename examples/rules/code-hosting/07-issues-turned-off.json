@@ -1,0 +1,21 @@
+{
+  "name": "Issues turned off",
+  "route": "POST /repos/{owner}/{repo}/issues",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "repo",
+        "op": "eq",
+        "value": "archived"
+      }
+    ]
+  },
+  "then": {
+    "status": 410,
+    "body": {
+      "message": "Issues are turned off for {{request.path.repo}}"
+    }
+  }
+}

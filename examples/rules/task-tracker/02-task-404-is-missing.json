@@ -1,0 +1,21 @@
+{
+  "name": "Task 404 is missing",
+  "route": "GET /tasks/{taskId}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "taskId",
+        "op": "eq",
+        "value": 404
+      }
+    ]
+  },
+  "then": {
+    "status": 404,
+    "body": {
+      "message": "No task with id {{request.path.taskId}}"
+    }
+  }
+}

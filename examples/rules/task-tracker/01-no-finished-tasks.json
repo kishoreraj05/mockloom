@@ -1,0 +1,22 @@
+{
+  "name": "No finished tasks",
+  "route": "GET /tasks",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "query",
+        "field": "status",
+        "op": "eq",
+        "value": "done"
+      }
+    ]
+  },
+  "then": {
+    "status": 200,
+    "body": {
+      "items": [],
+      "nextCursor": null
+    }
+  }
+}

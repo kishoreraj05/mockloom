@@ -1,0 +1,17 @@
+{
+  "name": "Created pet echoes the body",
+  "route": "POST /pets",
+  "priority": 50,
+  "then": {
+    "status": 201,
+    "headers": {
+      "location": "/pets/{{faker.uuid4}}"
+    },
+    "body": {
+      "id": 123,
+      "name": "{{request.body.name}}",
+      "price": "{{request.body.price}}",
+      "status": "pending"
+    }
+  }
+}

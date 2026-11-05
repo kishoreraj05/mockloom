@@ -1,0 +1,25 @@
+{
+  "name": "Slow processor",
+  "route": "POST /charges",
+  "priority": 20,
+  "when": {
+    "all": [
+      {
+        "source": "header",
+        "field": "x-simulate",
+        "op": "eq",
+        "value": "slow"
+      }
+    ]
+  },
+  "then": {
+    "status": 201,
+    "delay_ms": 1500,
+    "body": {
+      "id": "ch_slow000000",
+      "amount": "{{request.body.amount}}",
+      "currency": "{{request.body.currency}}",
+      "status": "pending"
+    }
+  }
+}

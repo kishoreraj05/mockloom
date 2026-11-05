@@ -1,0 +1,24 @@
+[project]
+name = "mockforge-engine"
+version = "0.1.0"
+description = "Turns an OpenAPI 3.x document into a rule-driven mock. Pure Python, no web framework."
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.7,<3",
+  "pyyaml>=6",
+  "openapi-spec-validator>=0.7",
+  "jsonschema>=4.21",
+  "rfc3339-validator>=0.1.4",
+  "faker>=25",
+  "jinja2>=3.1",
+  "jsonpath-ng>=1.6",
+  "regex>=2024.5.15",
+  "rstr>=3.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mockforge_engine"]

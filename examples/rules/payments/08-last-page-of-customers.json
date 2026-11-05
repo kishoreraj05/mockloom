@@ -1,0 +1,22 @@
+{
+  "name": "Last page of customers",
+  "route": "GET /customers",
+  "priority": 20,
+  "when": {
+    "all": [
+      {
+        "source": "query",
+        "field": "starting_after",
+        "op": "eq",
+        "value": "cus_last"
+      }
+    ]
+  },
+  "then": {
+    "status": 200,
+    "body": {
+      "data": [],
+      "has_more": false
+    }
+  }
+}

@@ -1,0 +1,401 @@
+[
+ {
+  "name": "1password.com:events",
+  "url": "https://api.apis.guru/v2/specs/1password.com/events/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "a0b312c4d85d4bc07894225260c79e88e8a1d568218bb9c297b4fd0d78b85a22",
+  "bytes": 14312
+ },
+ {
+  "name": "ably.io:platform",
+  "url": "https://api.apis.guru/v2/specs/ably.io/platform/1.1.0/openapi.json",
+  "openapi": "3.0.1",
+  "sha256": "e2d7989f73b78ac62ff925692797e6c7a07e0c5423e7bb5a118174848f294d41",
+  "bytes": 61622
+ },
+ {
+  "name": "adyen.com:BalanceControlService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/BalanceControlService/1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "e9b33b8b7b686c54001b31731899aa2c5355691fa3b78784ebd45e112629f635",
+  "bytes": 10990
+ },
+ {
+  "name": "adyen.com:BalancePlatformConfigurationNotification-v1",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/BalancePlatformConfigurationNotification-v1/1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "76984b2b006ad13199e55faac7bfecb9f2f2413ded92bdeaae7e2379831fed5d",
+  "bytes": 91984
+ },
+ {
+  "name": "adyen.com:BalancePlatformReportNotification-v1",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/BalancePlatformReportNotification-v1/1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "f117cb08f9f8ca580f4169dcf6cff21d29044d754fc263ada9518961bf114329",
+  "bytes": 8273
+ },
+ {
+  "name": "adyen.com:BinLookupService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/BinLookupService/54/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "fd58b45bd7f4978caac5f4f83428d73797d986bbd4ade3f4515eae7153c694e9",
+  "bytes": 35291
+ },
+ {
+  "name": "adyen.com:CheckoutService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/CheckoutService/70/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "8b1a8042d8d63c3176ca378ace46d6e4b45dbc89d633b7c504a8deb678949489",
+  "bytes": 778345
+ },
+ {
+  "name": "adyen.com:HopService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/HopService/6/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "db76302b52ef9ed0fba596430b6a8b91467f0aa511d1bfbd39f1d1a539be833d",
+  "bytes": 27716
+ },
+ {
+  "name": "adyen.com:LegalEntityService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/LegalEntityService/3/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "42c7a8f89663ddad422e0d8c24f00492feeaf18bfb26103c34d4a71b1943eff0",
+  "bytes": 228325
+ },
+ {
+  "name": "adyen.com:ManagementService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/ManagementService/1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "64581e597b39b01239da056b7b3838df544e3fc9d2c53e5b5b8188a85a7db667",
+  "bytes": 936066
+ },
+ {
+  "name": "adyen.com:RecurringService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/RecurringService/68/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "b94b4e0f64a448083d90760a282dc86ecc1621bc5c33e0e67c160a6700763294",
+  "bytes": 53080
+ },
+ {
+  "name": "adyen.com:TfmAPIService",
+  "url": "https://api.apis.guru/v2/specs/adyen.com/TfmAPIService/1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "f0af3b1ed1e14634e2be426dd09a1579dcc58d43d27e234661f6731eeb06ab8a",
+  "bytes": 51524
+ },
+ {
+  "name": "amazonaws.com:kafka",
+  "url": "https://api.apis.guru/v2/specs/amazonaws.com/kafka/2018-11-14/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "18d1ef5eb60d1a383a3d3a811ac4c713a7338a09a31ee726a24b1651372a691c",
+  "bytes": 321342
+ },
+ {
+  "name": "amazonaws.com:personalize",
+  "url": "https://api.apis.guru/v2/specs/amazonaws.com/personalize/2018-05-22/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "2a1675325c1ba76a33b168e118d12c0c8f93f0bc1479c24b0912a6d34535708e",
+  "bytes": 451824
+ },
+ {
+  "name": "amazonaws.com:redshift-data",
+  "url": "https://api.apis.guru/v2/specs/amazonaws.com/redshift-data/2019-12-20/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "d67e12ff048af3da3abbea2bd7e692717d41526468eddf97fb2b096c2a4bede6",
+  "bytes": 117016
+ },
+ {
+  "name": "amazonaws.com:swf",
+  "url": "https://api.apis.guru/v2/specs/amazonaws.com/swf/2012-01-25/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "c2962640fcf119d041551f464d33e86ae1e5e5933c27e33c96e3dd7ebdc077e5",
+  "bytes": 499306
+ },
+ {
+  "name": "apisetu.gov.in:aiimsrishikesh",
+  "url": "https://api.apis.guru/v2/specs/apisetu.gov.in/aiimsrishikesh/3.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "db2bb1bf0af5d9f67386190a8b29d178ca8049b27383cc7c80db123bc24a7e10",
+  "bytes": 37673
+ },
+ {
+  "name": "apisetu.gov.in:jac",
+  "url": "https://api.apis.guru/v2/specs/apisetu.gov.in/jac/3.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "31e45394613822b0f96eaa398d381613daa4c430ed718e7560ea9c34da247126",
+  "bytes": 49104
+ },
+ {
+  "name": "apisetu.gov.in:neilit",
+  "url": "https://api.apis.guru/v2/specs/apisetu.gov.in/neilit/3.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "5e3271bb02bee9f0d777d06ea02748869ad8f151834de451cd5d8da0940aa281",
+  "bytes": 38071
+ },
+ {
+  "name": "apisetu.gov.in:scvtup",
+  "url": "https://api.apis.guru/v2/specs/apisetu.gov.in/scvtup/3.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "3167b6296bb14dfada5af0500cfa11d7fd6f7c8acf5ada97f1403ab9b9d61624",
+  "bytes": 42213
+ },
+ {
+  "name": "apisetu.gov.in:tataaig",
+  "url": "https://api.apis.guru/v2/specs/apisetu.gov.in/tataaig/3.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "cad3f4bf045a3c2dc2b8316b243d69b5a55f9e7006b42c34c39a71cbf33cfe26",
+  "bytes": 37700
+ },
+ {
+  "name": "asana.com",
+  "url": "https://api.apis.guru/v2/specs/asana.com/1.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "40c1c94d476c897f707c2974a3aeedee1d0b8a6eab8b7654819c0effa0f8ffa6",
+  "bytes": 604802
+ },
+ {
+  "name": "box.com",
+  "url": "https://api.apis.guru/v2/specs/box.com/2.0.0/openapi.json",
+  "openapi": "3.0.2",
+  "sha256": "d377227c5cf71625eb9d7567dd096ba2507568712c5e3fb5691b5d13c11e6a58",
+  "bytes": 1452351
+ },
+ {
+  "name": "circleci.com",
+  "url": "https://api.apis.guru/v2/specs/circleci.com/v1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "1aecb0fe4075b7dce69ed91e5c12b872e09f83064192679ae52ff64513d32c95",
+  "bytes": 38048
+ },
+ {
+  "name": "codat.io:accounting",
+  "url": "https://api.apis.guru/v2/specs/codat.io/accounting/2.1.0/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "98aa125c5c85dd78e72acd5f2e3e4fda62825b8ff074dee7332fd2bfc7f657f9",
+  "bytes": 3026752
+ },
+ {
+  "name": "codat.io:bank-feeds",
+  "url": "https://api.apis.guru/v2/specs/codat.io/bank-feeds/2.1.0/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "1a98041ef15aadf06175614c1579aca60058b327d70ac97db8cb80300482b899",
+  "bytes": 35062
+ },
+ {
+  "name": "codat.io:commerce",
+  "url": "https://api.apis.guru/v2/specs/codat.io/commerce/2.1.0/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "35fda371af449a573639d5155e36aee7ab1860441fb70625e5b381e2ef5ee2d9",
+  "bytes": 94192
+ },
+ {
+  "name": "codat.io:sync-for-expenses",
+  "url": "https://api.apis.guru/v2/specs/codat.io/sync-for-expenses/prealpha/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "80ac157144261e8d026ad749257104831fc7efe889d5ea7004e5c2787d6d0b1b",
+  "bytes": 57707
+ },
+ {
+  "name": "digitalocean.com",
+  "url": "https://api.apis.guru/v2/specs/digitalocean.com/2.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "21c7fd1ddfb7476410fe75934acb74be59e0747b27361a0e67da7f396ef861c5",
+  "bytes": 1908923
+ },
+ {
+  "name": "docusign.net",
+  "url": "https://api.apis.guru/v2/specs/docusign.net/v2.1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "bcdba766a39b7760e00c7822946879192a63db1f440f91f2d57335c9b78ffaef",
+  "bytes": 3689461
+ },
+ {
+  "name": "ebay.com:developer-analytics",
+  "url": "https://api.apis.guru/v2/specs/ebay.com/developer-analytics/v1_beta.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "6040d71417144624130c59f811205b97783fd737f121c32b6329d24455e504a1",
+  "bytes": 18888
+ },
+ {
+  "name": "getpostman.com",
+  "url": "https://api.apis.guru/v2/specs/getpostman.com/1.20.0/openapi.json",
+  "openapi": "3.0.3",
+  "sha256": "46310b1a5744441e2c28a718178d2f9fc127270a53c4ee011202be2e5eb1ca3e",
+  "bytes": 286368
+ },
+ {
+  "name": "googleapis.com:dataflow",
+  "url": "https://api.apis.guru/v2/specs/googleapis.com/dataflow/v1b3/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "08f0f0394098d3616c29d3c5f43c08049711301f33b65a620d27b1a63ccb9561",
+  "bytes": 357650
+ },
+ {
+  "name": "googleapis.com:firebasedynamiclinks",
+  "url": "https://api.apis.guru/v2/specs/googleapis.com/firebasedynamiclinks/v1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "0b64eb38b8b865f1c9a48e6ef68ffca4613c3a17fd502f08c99670b7507ff516",
+  "bytes": 45078
+ },
+ {
+  "name": "googleapis.com:privateca",
+  "url": "https://api.apis.guru/v2/specs/googleapis.com/privateca/v1beta1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "bd9a9cda664450ba0ae54dc86195974ed59768a2f7fdb68037574fa5d4245efc",
+  "bytes": 48051
+ },
+ {
+  "name": "googleapis.com:servicedirectory",
+  "url": "https://api.apis.guru/v2/specs/googleapis.com/servicedirectory/v1beta1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "e28fff21164b850a269a4f17e8ab2b8be34ee9d293ba7dd95559c1722c88f739",
+  "bytes": 69047
+ },
+ {
+  "name": "gov.bc.ca:news",
+  "url": "https://api.apis.guru/v2/specs/gov.bc.ca/news/1.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "eeaab809422ef816cf38118afa9a98fcc120c6e080192d420afda0a479d1f4c9",
+  "bytes": 56259
+ },
+ {
+  "name": "hetzner.cloud",
+  "url": "https://api.apis.guru/v2/specs/hetzner.cloud/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "31312e25858be13253b4bf8c49f4b77e2330b74580c910cae625f8b4e242dab3",
+  "bytes": 1480231
+ },
+ {
+  "name": "linode.com",
+  "url": "https://api.apis.guru/v2/specs/linode.com/4.145.0/openapi.json",
+  "openapi": "3.0.1",
+  "sha256": "f8de7e6d551673a8871009982b3936674a9a54ff56c9439ead5282986cb1bfbd",
+  "bytes": 1177644
+ },
+ {
+  "name": "nytimes.com:article_search",
+  "url": "https://api.apis.guru/v2/specs/nytimes.com/article_search/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "c8d4afdb86ad52840ac9660f4e15fd2382f9da289cf7c54d2c65888d81b49486",
+  "bytes": 10810
+ },
+ {
+  "name": "openai.com",
+  "url": "https://api.apis.guru/v2/specs/openai.com/1.2.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "8ab0b2055010705b1c6f8462e742b325afaef3617503d35f6b2a67dac241517f",
+  "bytes": 145331
+ },
+ {
+  "name": "pandascore.co",
+  "url": "https://api.apis.guru/v2/specs/pandascore.co/2.23.1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "d8fd0a99b69306865eb66df122c489f7758f7e9a2ff3b70ee8da6b3548aa6f34",
+  "bytes": 1327738
+ },
+ {
+  "name": "plaid.com",
+  "url": "https://api.apis.guru/v2/specs/plaid.com/2020-09-14_1.334.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "bfdec4219280386904cf210814f4aa4e7ee98ca60b24d5a3c92a2ea87f3c23dd",
+  "bytes": 1858919
+ },
+ {
+  "name": "redeal.io",
+  "url": "https://api.apis.guru/v2/specs/redeal.io/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "7ed9a4652b44ef9f00b55fc0e1146744c27509ccc56a24b2525b7aab262d08a6",
+  "bytes": 8629
+ },
+ {
+  "name": "sendgrid.com",
+  "url": "https://api.apis.guru/v2/specs/sendgrid.com/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "80aaf7926007ffa486bf9d2d5d8b1337ec8a361d465a0f17dbe784258f8b2a1f",
+  "bytes": 1551569
+ },
+ {
+  "name": "slack.com",
+  "url": "https://api.apis.guru/v2/specs/slack.com/1.7.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "a623a38a3be7e3b6bc47e74401b509d4e044025b4ce8eefe611034c7bca1077a",
+  "bytes": 998622
+ },
+ {
+  "name": "spotify.com",
+  "url": "https://api.apis.guru/v2/specs/spotify.com/1.0.0/openapi.json",
+  "openapi": "3.0.1",
+  "sha256": "3a652300be23d23f2efc67b03738851be4f99949b05f0fc7f465504dee075594",
+  "bytes": 355178
+ },
+ {
+  "name": "stoplight.io",
+  "url": "https://api.apis.guru/v2/specs/stoplight.io/api-v1/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "6d765e177876f7620115d8ea09dd8140a44f47e9b1848bc4def0c20fe547e7ed",
+  "bytes": 18812
+ },
+ {
+  "name": "stripe.com",
+  "url": "https://api.apis.guru/v2/specs/stripe.com/2022-11-15/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "76e10a2395402ad46f157a39a6bfc6b2843e07251d769fdfbe7042b749d881f2",
+  "bytes": 4768715
+ },
+ {
+  "name": "twilio.com:api",
+  "url": "https://api.apis.guru/v2/specs/twilio.com/api/1.42.0/openapi.json",
+  "openapi": "3.0.1",
+  "sha256": "da7415f66ddf68ca230abda171c15ad08e32c290045f9865f6a4460b0adc58aa",
+  "bytes": 1206318
+ },
+ {
+  "name": "vercel.com",
+  "url": "https://api.apis.guru/v2/specs/vercel.com/0.0.1/openapi.json",
+  "openapi": "3.1.0",
+  "sha256": "0f92aad225ff03a997b1127e7692ba2ad30a8560797945146bcc47139ca6491b",
+  "bytes": 1323217
+ },
+ {
+  "name": "vimeo.com",
+  "url": "https://api.apis.guru/v2/specs/vimeo.com/3.4/openapi.json",
+  "openapi": "3.0.2",
+  "sha256": "903a5ccd13df36451e3f3855c686cbc4f379b0a5767cbdb47421634af9a7fcc9",
+  "bytes": 996070
+ },
+ {
+  "name": "vtex.local:Orders-API",
+  "url": "https://api.apis.guru/v2/specs/vtex.local/Orders-API/1.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "90e4b41d9152a5454f84e61f493b21396f3a6b95ec987f1d2570719e328cf552",
+  "bytes": 590728
+ },
+ {
+  "name": "vtex.local:Orders-API-(PII-version)",
+  "url": "https://api.apis.guru/v2/specs/vtex.local/Orders-API-(PII-version)/1.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "9b1980fbb8ec7ad1a6aea4d535f8f2bbd57f91979024e18c233fb5a455fea7be",
+  "bytes": 248372
+ },
+ {
+  "name": "vtex.local:Profile-System",
+  "url": "https://api.apis.guru/v2/specs/vtex.local/Profile-System/1.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "143b4f417d688ae3046d11936a9b889a1fc06c2926b95a59c18702dfddf5adfe",
+  "bytes": 63145
+ },
+ {
+  "name": "xero.com:xero-identity",
+  "url": "https://api.apis.guru/v2/specs/xero.com/xero-identity/2.9.4/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "feece0946fcd84f7cee2f8c77252efdc4a0e853808e6603efce71840ec1840f2",
+  "bytes": 10097
+ },
+ {
+  "name": "xkcd.com",
+  "url": "https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json",
+  "openapi": "3.0.0",
+  "sha256": "7f82ca41360d184f0d72310092eac12df6d51527128c5a60b3d4fa2db43cfe7e",
+  "bytes": 2646
+ }
+]

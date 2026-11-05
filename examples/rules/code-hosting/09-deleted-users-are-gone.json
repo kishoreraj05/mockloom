@@ -1,0 +1,21 @@
+{
+  "name": "Deleted users are gone",
+  "route": "GET /users/{username}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "username",
+        "op": "regex",
+        "value": "^deleted-"
+      }
+    ]
+  },
+  "then": {
+    "status": 404,
+    "body": {
+      "message": "User {{request.path.username}} no longer exists"
+    }
+  }
+}

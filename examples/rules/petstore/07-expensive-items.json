@@ -1,0 +1,21 @@
+{
+  "name": "Expensive pets need approval",
+  "route": "POST /pets",
+  "priority": 20,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.price",
+        "op": "gt",
+        "value": 1000
+      }
+    ]
+  },
+  "then": {
+    "status": 400,
+    "body": {
+      "message": "Pets over 1000 need approval"
+    }
+  }
+}

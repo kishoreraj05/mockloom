@@ -1,0 +1,15 @@
+{
+  "name": "Echo the task id",
+  "route": "GET /tasks/{taskId}",
+  "priority": 50,
+  "then": {
+    "status": 200,
+    "body": {
+      "id": "{{request.path.taskId}}",
+      "title": "Task {{request.path.taskId}}",
+      "status": "todo",
+      "assignee": "{{faker.email}}",
+      "createdAt": "{{now}}"
+    }
+  }
+}

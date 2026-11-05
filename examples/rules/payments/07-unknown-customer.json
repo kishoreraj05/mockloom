@@ -1,0 +1,24 @@
+{
+  "name": "Unknown customer",
+  "route": "GET /customers/{customerId}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "customerId",
+        "op": "eq",
+        "value": "cus_missing"
+      }
+    ]
+  },
+  "then": {
+    "status": 404,
+    "body": {
+      "error": {
+        "code": "not_found",
+        "message": "No customer {{request.path.customerId}}"
+      }
+    }
+  }
+}

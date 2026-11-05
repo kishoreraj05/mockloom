@@ -1,0 +1,19 @@
+{
+  "name": "Echo the repository name",
+  "route": "GET /repos/{owner}/{repo}",
+  "priority": 50,
+  "then": {
+    "status": 200,
+    "body": {
+      "id": 1,
+      "full_name": "{{request.path.owner}}/{{request.path.repo}}",
+      "description": "{{faker.sentence}}",
+      "private": false,
+      "stars": 128,
+      "owner": {
+        "id": 1,
+        "login": "{{request.path.owner}}"
+      }
+    }
+  }
+}

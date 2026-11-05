@@ -1,0 +1,21 @@
+{
+  "name": "Private repository",
+  "route": "GET /repos/{owner}/{repo}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "owner",
+        "op": "eq",
+        "value": "private-org"
+      }
+    ]
+  },
+  "then": {
+    "status": 403,
+    "body": {
+      "message": "You don't have access to {{request.path.owner}}/{{request.path.repo}}"
+    }
+  }
+}

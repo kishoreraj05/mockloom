@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mockforge",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": ["MOCKFORGE_DATABASE_URL=sqlite:///./.preview.db", ".venv/bin/uvicorn", "mockforge_api.asgi:app", "--port", "18800", "--log-level", "warning"],
+      "port": 18800
+    }
+  ]
+}

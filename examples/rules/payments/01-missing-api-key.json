@@ -1,0 +1,24 @@
+{
+  "name": "Missing API key",
+  "route": "GET /balance",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "header",
+        "field": "authorization",
+        "op": "exists",
+        "value": false
+      }
+    ]
+  },
+  "then": {
+    "status": 401,
+    "body": {
+      "error": {
+        "code": "unauthorized",
+        "message": "Send your API key in the Authorization header"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Already refunded",
+  "route": "POST /refunds",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.charge",
+        "op": "eq",
+        "value": "ch_refunded"
+      }
+    ]
+  },
+  "then": {
+    "status": 409,
+    "body": {
+      "error": {
+        "code": "already_refunded",
+        "message": "Charge {{request.body.charge}} was already refunded"
+      }
+    }
+  }
+}

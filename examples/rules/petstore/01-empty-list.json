@@ -1,0 +1,22 @@
+{
+  "name": "Empty list",
+  "route": "GET /pets",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "query",
+        "field": "status",
+        "op": "eq",
+        "value": "empty"
+      }
+    ]
+  },
+  "then": {
+    "status": 200,
+    "body": {
+      "items": [],
+      "total": 0
+    }
+  }
+}

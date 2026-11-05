@@ -1,0 +1,14 @@
+# Workspace-level tool config. Each package has its own pyproject.
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["apps/api/src/mockforge_api/migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]  # FastAPI's Depends() in defaults is the documented pattern.
+
+[tool.pytest.ini_options]
+testpaths = ["packages/engine/tests", "apps/api/tests", "tests"]
+addopts = "-q --import-mode=importlib"
+markers = ["corpus: needs the downloaded spec corpus (scripts/fetch_corpus.py)"]

@@ -1,0 +1,21 @@
+{
+  "name": "Only admins can delete",
+  "route": "DELETE /tasks/{taskId}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "cookie",
+        "field": "role",
+        "op": "neq",
+        "value": "admin"
+      }
+    ]
+  },
+  "then": {
+    "status": 403,
+    "body": {
+      "message": "Only admins can delete tasks"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Duplicate title",
+  "route": "POST /tasks",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.title",
+        "op": "eq",
+        "value": "Duplicate"
+      }
+    ]
+  },
+  "then": {
+    "status": 409,
+    "body": {
+      "message": "A task called {{request.body.title}} already exists"
+    }
+  }
+}

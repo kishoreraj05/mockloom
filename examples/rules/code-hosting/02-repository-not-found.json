@@ -1,0 +1,21 @@
+{
+  "name": "Repository not found",
+  "route": "GET /repos/{owner}/{repo}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "repo",
+        "op": "eq",
+        "value": "missing"
+      }
+    ]
+  },
+  "then": {
+    "status": 404,
+    "body": {
+      "message": "Repository not found"
+    }
+  }
+}

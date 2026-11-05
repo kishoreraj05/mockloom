@@ -1,0 +1,24 @@
+{
+  "name": "Search rate limit",
+  "route": "GET /search/repositories",
+  "priority": 5,
+  "when": {
+    "all": [
+      {
+        "source": "header",
+        "field": "x-simulate",
+        "op": "eq",
+        "value": "rate-limit"
+      }
+    ]
+  },
+  "then": {
+    "status": 403,
+    "headers": {
+      "x-ratelimit-remaining": "0"
+    },
+    "body": {
+      "message": "API rate limit exceeded"
+    }
+  }
+}

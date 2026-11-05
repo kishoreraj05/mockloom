@@ -1,0 +1,159 @@
+{
+  "$defs": {
+    "Condition": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "path",
+            "query",
+            "header",
+            "cookie",
+            "body"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "field": {
+          "description": "Parameter, header or cookie name; a JSONPath such as $.items[0].sku for body.",
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "neq",
+            "in",
+            "contains",
+            "regex",
+            "gt",
+            "lt",
+            "exists",
+            "matches_schema"
+          ],
+          "title": "Op",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "source",
+        "field",
+        "op"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "Then": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "default": 200,
+          "maximum": 599,
+          "minimum": 100,
+          "title": "Status",
+          "type": "integer"
+        },
+        "body": {
+          "default": null,
+          "description": "JSON value or template string. Leave out to generate from the spec's schema.",
+          "title": "Body"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Headers",
+          "type": "object"
+        },
+        "delay_ms": {
+          "default": 0,
+          "maximum": 60000,
+          "minimum": 0,
+          "title": "Delay Ms",
+          "type": "integer"
+        }
+      },
+      "title": "Then",
+      "type": "object"
+    },
+    "When": {
+      "additionalProperties": false,
+      "properties": {
+        "all": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Condition"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "All"
+        },
+        "any": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Condition"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Any"
+        }
+      },
+      "title": "When",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One rule. Lower priority numbers are evaluated first; ties keep creation order.",
+  "properties": {
+    "name": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "route": {
+      "description": "Route key such as 'GET /users/{id}'.",
+      "title": "Route",
+      "type": "string"
+    },
+    "priority": {
+      "default": 100,
+      "title": "Priority",
+      "type": "integer"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "when": {
+      "$ref": "#/$defs/When"
+    },
+    "then": {
+      "$ref": "#/$defs/Then"
+    }
+  },
+  "required": [
+    "name",
+    "route"
+  ],
+  "title": "Rule",
+  "type": "object"
+}

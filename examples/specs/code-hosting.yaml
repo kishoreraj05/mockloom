@@ -1,0 +1,196 @@
+# Nested routes with several path parameters, search, and permission errors.
+openapi: 3.0.3
+info:
+  title: Code Hosting API
+  version: 1.0.0
+  description: A fictional code hosting API. Good for testing nested resources and search.
+tags:
+  - name: repositories
+  - name: issues
+  - name: users
+paths:
+  /users/{username}:
+    get:
+      tags: [users]
+      summary: Get a user
+      operationId: getUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: One user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "404":
+          description: No such user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /search/repositories:
+    get:
+      tags: [repositories]
+      summary: Search repositories
+      operationId: searchRepositories
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+        - name: per_page
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100 }
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total_count, items]
+                properties:
+                  total_count: { type: integer, minimum: 0 }
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/Repository" }
+        "403":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /repos/{owner}/{repo}:
+    parameters:
+      - { $ref: "#/components/parameters/Owner" }
+      - { $ref: "#/components/parameters/Repo" }
+    get:
+      tags: [repositories]
+      summary: Get a repository
+      operationId: getRepository
+      responses:
+        "200":
+          description: One repository
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Repository" }
+        "403":
+          description: Private repository
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: No such repository
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /repos/{owner}/{repo}/issues:
+    parameters:
+      - { $ref: "#/components/parameters/Owner" }
+      - { $ref: "#/components/parameters/Repo" }
+    get:
+      tags: [issues]
+      summary: List issues
+      operationId: listIssues
+      parameters:
+        - name: state
+          in: query
+          schema: { type: string, enum: [open, closed, all] }
+      responses:
+        "200":
+          description: Issues
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Issue" }
+    post:
+      tags: [issues]
+      summary: Open an issue
+      operationId: createIssue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string, minLength: 1 }
+                body: { type: string }
+            example: { title: Crash on startup, body: It crashes when the config file is empty. }
+      responses:
+        "201":
+          description: Opened
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Issue" }
+        "410":
+          description: Issues are turned off for this repository
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /repos/{owner}/{repo}/issues/{number}:
+    parameters:
+      - { $ref: "#/components/parameters/Owner" }
+      - { $ref: "#/components/parameters/Repo" }
+      - name: number
+        in: path
+        required: true
+        schema: { type: integer, minimum: 1 }
+    get:
+      tags: [issues]
+      summary: Get an issue
+      operationId: getIssue
+      responses:
+        "200":
+          description: One issue
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Issue" }
+components:
+  parameters:
+    Owner:
+      name: owner
+      in: path
+      required: true
+      schema: { type: string }
+    Repo:
+      name: repo
+      in: path
+      required: true
+      schema: { type: string }
+  schemas:
+    User:
+      type: object
+      required: [id, login]
+      properties:
+        id: { type: integer, minimum: 1 }
+        login: { type: string, example: octo-dev }
+        name: { type: string, nullable: true }
+        avatarUrl: { type: string, format: uri }
+    Repository:
+      type: object
+      required: [id, full_name, private, owner]
+      properties:
+        id: { type: integer, minimum: 1 }
+        full_name: { type: string, example: acme/rocket }
+        description: { type: string, nullable: true }
+        private: { type: boolean }
+        stars: { type: integer, minimum: 0 }
+        owner: { $ref: "#/components/schemas/User" }
+    Issue:
+      type: object
+      required: [number, title, state, author]
+      properties:
+        number: { type: integer, minimum: 1 }
+        title: { type: string }
+        state: { type: string, enum: [open, closed] }
+        author: { $ref: "#/components/schemas/User" }
+        createdAt: { type: string, format: date-time }
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }

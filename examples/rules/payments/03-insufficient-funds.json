@@ -1,0 +1,24 @@
+{
+  "name": "Insufficient funds",
+  "route": "POST /charges",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.source",
+        "op": "eq",
+        "value": "tok_no_funds"
+      }
+    ]
+  },
+  "then": {
+    "status": 402,
+    "body": {
+      "error": {
+        "code": "insufficient_funds",
+        "message": "Not enough funds to charge {{request.body.amount}}"
+      }
+    }
+  }
+}

@@ -1,0 +1,119 @@
+# The simplest example, and the best one to copy. Uses OpenAPI 3.1.
+openapi: 3.1.0
+info:
+  title: Task Tracker
+  version: 1.0.0
+  description: A small to-do API. Start here to see how routes, schemas and rules fit together.
+tags:
+  - name: tasks
+paths:
+  /tasks:
+    get:
+      tags: [tasks]
+      summary: List tasks
+      operationId: listTasks
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: "#/components/schemas/Status" }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100 }
+      responses:
+        "200":
+          description: A page of tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, nextCursor]
+                properties:
+                  items:
+                    type: array
+                    maxItems: 5
+                    items: { $ref: "#/components/schemas/Task" }
+                  nextCursor: { type: [string, "null"] }
+    post:
+      tags: [tasks]
+      summary: Create a task
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewTask" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+        "409":
+          description: A task with this title already exists
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /tasks/{taskId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema: { type: integer, minimum: 1 }
+    get:
+      tags: [tasks]
+      summary: Get a task
+      operationId: getTask
+      responses:
+        "200":
+          description: One task
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+        "404":
+          description: No such task
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    delete:
+      tags: [tasks]
+      summary: Delete a task
+      operationId: deleteTask
+      responses:
+        "204":
+          description: Deleted
+        "403":
+          description: Only admins can delete tasks
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+components:
+  schemas:
+    Status:
+      type: string
+      enum: [todo, doing, done]
+    NewTask:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 120, examples: [Write the launch post] }
+        assignee: { type: [string, "null"], format: email }
+        dueDate: { type: [string, "null"], format: date }
+    Task:
+      allOf:
+        - $ref: "#/components/schemas/NewTask"
+        - type: object
+          required: [id, status, createdAt]
+          properties:
+            id: { type: integer, minimum: 1 }
+            status: { $ref: "#/components/schemas/Status" }
+            labels:
+              type: array
+              maxItems: 3
+              uniqueItems: true
+              items: { type: string, enum: [bug, feature, chore] }
+            createdAt: { type: string, format: date-time }
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }

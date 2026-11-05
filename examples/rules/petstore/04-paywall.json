@@ -1,0 +1,25 @@
+{
+  "name": "Free tier hits the paywall",
+  "route": "GET /pets",
+  "priority": 20,
+  "when": {
+    "all": [
+      {
+        "source": "header",
+        "field": "x-user-tier",
+        "op": "in",
+        "value": [
+          "free",
+          "trial"
+        ]
+      }
+    ]
+  },
+  "then": {
+    "status": 402,
+    "body": {
+      "message": "Upgrade to see more pets"
+    },
+    "delay_ms": 300
+  }
+}

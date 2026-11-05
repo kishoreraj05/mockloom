@@ -1,0 +1,27 @@
+{
+  "name": "Rate limited",
+  "route": "GET /customers",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "header",
+        "field": "x-simulate",
+        "op": "eq",
+        "value": "rate-limit"
+      }
+    ]
+  },
+  "then": {
+    "status": 429,
+    "headers": {
+      "retry-after": "30"
+    },
+    "body": {
+      "error": {
+        "code": "rate_limited",
+        "message": "Slow down and retry in 30 seconds"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Pet 999 is missing",
+  "route": "GET /pets/{id}",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "path",
+        "field": "id",
+        "op": "eq",
+        "value": 999
+      }
+    ]
+  },
+  "then": {
+    "status": 404,
+    "body": {
+      "code": 404,
+      "message": "No pet with id {{request.path.id}}"
+    }
+  }
+}

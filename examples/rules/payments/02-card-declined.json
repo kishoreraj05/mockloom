@@ -1,0 +1,24 @@
+{
+  "name": "Card declined",
+  "route": "POST /charges",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$.source",
+        "op": "eq",
+        "value": "tok_declined"
+      }
+    ]
+  },
+  "then": {
+    "status": 402,
+    "body": {
+      "error": {
+        "code": "card_declined",
+        "message": "The card was declined"
+      }
+    }
+  }
+}

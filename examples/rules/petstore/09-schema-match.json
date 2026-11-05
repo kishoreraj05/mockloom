@@ -1,0 +1,35 @@
+{
+  "name": "Tagged pets get special treatment",
+  "route": "POST /pets",
+  "priority": 30,
+  "when": {
+    "all": [
+      {
+        "source": "body",
+        "field": "$",
+        "op": "matches_schema",
+        "value": {
+          "type": "object",
+          "required": [
+            "tag"
+          ],
+          "properties": {
+            "tag": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    ]
+  },
+  "then": {
+    "status": 201,
+    "body": {
+      "id": 7,
+      "name": "{{request.body.name}}",
+      "tag": "{{request.body.tag | upper}}",
+      "status": "available"
+    }
+  }
+}

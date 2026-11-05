@@ -1,0 +1,19 @@
+{
+  "name": "No closed issues",
+  "route": "GET /repos/{owner}/{repo}/issues",
+  "priority": 10,
+  "when": {
+    "all": [
+      {
+        "source": "query",
+        "field": "state",
+        "op": "eq",
+        "value": "closed"
+      }
+    ]
+  },
+  "then": {
+    "status": 200,
+    "body": []
+  }
+}

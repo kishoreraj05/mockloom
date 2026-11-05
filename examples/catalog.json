@@ -1,0 +1,344 @@
+[
+  {
+    "id": "task-tracker",
+    "name": "Task Tracker",
+    "level": "Start here",
+    "openapi": "3.1",
+    "routes": 4,
+    "description": "A small to-do API. The easiest one to read and copy for your own project.",
+    "shows": [
+      "Empty lists",
+      "Echoing request values",
+      "Cookie checks"
+    ],
+    "try": [
+      {
+        "label": "A normal list, generated from the schema",
+        "method": "GET",
+        "path": "/tasks",
+        "expect_status": 200,
+        "expect_rule": null
+      },
+      {
+        "label": "An empty list",
+        "method": "GET",
+        "path": "/tasks",
+        "expect_status": 200,
+        "expect_rule": "No finished tasks",
+        "query": {
+          "status": "done"
+        }
+      },
+      {
+        "label": "A task that doesn't exist",
+        "method": "GET",
+        "path": "/tasks/404",
+        "expect_status": 404,
+        "expect_rule": "Task 404 is missing"
+      },
+      {
+        "label": "The response echoes the id you asked for",
+        "method": "GET",
+        "path": "/tasks/42",
+        "expect_status": 200,
+        "expect_rule": "Echo the task id"
+      },
+      {
+        "label": "Rejected by the spec: limit is too high",
+        "method": "GET",
+        "path": "/tasks",
+        "expect_status": 400,
+        "expect_rule": null,
+        "query": {
+          "limit": "1000"
+        }
+      },
+      {
+        "label": "Create a task",
+        "method": "POST",
+        "path": "/tasks",
+        "expect_status": 201,
+        "expect_rule": "Created task echoes the body",
+        "body": {
+          "title": "Write the launch post"
+        }
+      },
+      {
+        "label": "Delete without permission",
+        "method": "DELETE",
+        "path": "/tasks/1",
+        "expect_status": 403,
+        "expect_rule": "Only admins can delete"
+      },
+      {
+        "label": "Delete as an admin",
+        "method": "DELETE",
+        "path": "/tasks/1",
+        "expect_status": 204,
+        "expect_rule": null,
+        "headers": {
+          "cookie": "role=admin"
+        }
+      }
+    ]
+  },
+  {
+    "id": "petstore",
+    "name": "Petstore",
+    "level": "Classic",
+    "openapi": "3.0",
+    "routes": 6,
+    "description": "The classic OpenAPI sample, with a rule for every operator family.",
+    "shows": [
+      "Priorities",
+      "Paywalls",
+      "Body and schema matching"
+    ],
+    "try": [
+      {
+        "label": "An empty list",
+        "method": "GET",
+        "path": "/pets",
+        "expect_status": 200,
+        "expect_rule": "Empty list",
+        "query": {
+          "status": "empty"
+        }
+      },
+      {
+        "label": "A paywall for free users",
+        "method": "GET",
+        "path": "/pets",
+        "expect_status": 402,
+        "expect_rule": "Free tier hits the paywall",
+        "headers": {
+          "x-user-tier": "free"
+        }
+      },
+      {
+        "label": "A pet that doesn't exist",
+        "method": "GET",
+        "path": "/pets/999",
+        "expect_status": 404,
+        "expect_rule": "Pet 999 is missing"
+      },
+      {
+        "label": "The response echoes the id you asked for",
+        "method": "GET",
+        "path": "/pets/42",
+        "expect_status": 200,
+        "expect_rule": "Echo the requested id"
+      },
+      {
+        "label": "A duplicate name is rejected",
+        "method": "POST",
+        "path": "/pets",
+        "expect_status": 400,
+        "expect_rule": "Duplicate name is rejected",
+        "body": {
+          "name": "Rex"
+        }
+      },
+      {
+        "label": "Create a pet",
+        "method": "POST",
+        "path": "/pets",
+        "expect_status": 201,
+        "expect_rule": "Created pet echoes the body",
+        "body": {
+          "name": "Tom",
+          "price": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "payments",
+    "name": "Payments API",
+    "level": "Error handling",
+    "openapi": "3.0",
+    "routes": 7,
+    "description": "A fictional payments API for testing checkout flows and everything that goes wrong in them.",
+    "shows": [
+      "Declined cards",
+      "Rate limits",
+      "Slow responses"
+    ],
+    "try": [
+      {
+        "label": "A successful charge",
+        "method": "POST",
+        "path": "/charges",
+        "expect_status": 201,
+        "expect_rule": "Successful charge",
+        "body": {
+          "amount": 2500,
+          "currency": "usd",
+          "source": "tok_visa"
+        }
+      },
+      {
+        "label": "A declined card",
+        "method": "POST",
+        "path": "/charges",
+        "expect_status": 402,
+        "expect_rule": "Card declined",
+        "body": {
+          "amount": 2500,
+          "currency": "usd",
+          "source": "tok_declined"
+        }
+      },
+      {
+        "label": "Not enough funds",
+        "method": "POST",
+        "path": "/charges",
+        "expect_status": 402,
+        "expect_rule": "Insufficient funds",
+        "body": {
+          "amount": 2500,
+          "currency": "usd",
+          "source": "tok_no_funds"
+        }
+      },
+      {
+        "label": "A slow payment processor (1.5 s)",
+        "method": "POST",
+        "path": "/charges",
+        "expect_status": 201,
+        "expect_rule": "Slow processor",
+        "headers": {
+          "x-simulate": "slow"
+        },
+        "body": {
+          "amount": 2500,
+          "currency": "usd",
+          "source": "tok_visa"
+        }
+      },
+      {
+        "label": "Rate limited",
+        "method": "GET",
+        "path": "/customers",
+        "expect_status": 429,
+        "expect_rule": "Rate limited",
+        "headers": {
+          "x-simulate": "rate-limit"
+        }
+      },
+      {
+        "label": "The last page of a list",
+        "method": "GET",
+        "path": "/customers",
+        "expect_status": 200,
+        "expect_rule": "Last page of customers",
+        "query": {
+          "starting_after": "cus_last"
+        }
+      },
+      {
+        "label": "A missing API key",
+        "method": "GET",
+        "path": "/balance",
+        "expect_status": 401,
+        "expect_rule": "Missing API key"
+      },
+      {
+        "label": "A refund that already happened",
+        "method": "POST",
+        "path": "/refunds",
+        "expect_status": 409,
+        "expect_rule": "Already refunded",
+        "body": {
+          "charge": "ch_refunded"
+        }
+      }
+    ]
+  },
+  {
+    "id": "code-hosting",
+    "name": "Code Hosting API",
+    "level": "Nested routes",
+    "openapi": "3.0",
+    "routes": 6,
+    "description": "A fictional code hosting API with nested routes, search and permission errors.",
+    "shows": [
+      "Several path parameters",
+      "Search",
+      "Permission errors"
+    ],
+    "try": [
+      {
+        "label": "The response echoes the path",
+        "method": "GET",
+        "path": "/repos/acme/rocket",
+        "expect_status": 200,
+        "expect_rule": "Echo the repository name"
+      },
+      {
+        "label": "A private repository",
+        "method": "GET",
+        "path": "/repos/private-org/secrets",
+        "expect_status": 403,
+        "expect_rule": "Private repository"
+      },
+      {
+        "label": "A repository that doesn't exist",
+        "method": "GET",
+        "path": "/repos/acme/missing",
+        "expect_status": 404,
+        "expect_rule": "Repository not found"
+      },
+      {
+        "label": "A search with no results",
+        "method": "GET",
+        "path": "/search/repositories",
+        "expect_status": 200,
+        "expect_rule": "No search results",
+        "query": {
+          "q": "no-results"
+        }
+      },
+      {
+        "label": "Rejected by the spec: q is required",
+        "method": "GET",
+        "path": "/search/repositories",
+        "expect_status": 400,
+        "expect_rule": null
+      },
+      {
+        "label": "Search rate limit",
+        "method": "GET",
+        "path": "/search/repositories",
+        "expect_status": 403,
+        "expect_rule": "Search rate limit",
+        "query": {
+          "q": "rocket"
+        },
+        "headers": {
+          "x-simulate": "rate-limit"
+        }
+      },
+      {
+        "label": "Open an issue",
+        "method": "POST",
+        "path": "/repos/acme/rocket/issues",
+        "expect_status": 201,
+        "expect_rule": "New issue echoes the title",
+        "body": {
+          "title": "Crash on startup"
+        }
+      },
+      {
+        "label": "Issues turned off",
+        "method": "POST",
+        "path": "/repos/acme/archived/issues",
+        "expect_status": 410,
+        "expect_rule": "Issues turned off",
+        "body": {
+          "title": "Hello"
+        }
+      }
+    ]
+  }
+]

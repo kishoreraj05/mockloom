@@ -1,0 +1,15 @@
+{
+  "name": "Echo the requested id",
+  "route": "GET /pets/{id}",
+  "priority": 50,
+  "then": {
+    "status": 200,
+    "body": {
+      "id": "{{request.path.id}}",
+      "name": "{{faker.first_name}}",
+      "status": "available",
+      "ownerEmail": "{{faker.email}}",
+      "createdAt": "{{now}}"
+    }
+  }
+}
