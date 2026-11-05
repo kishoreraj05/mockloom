@@ -92,6 +92,7 @@ class ParameterOut(BaseModel):
     location: str
     required: bool
     schema_: Any = Field(default=None, alias="schema")
+    example: Any = Field(default=None, description="A dummy value that passes this parameter's validation.")
 
 
 class ResponseOut(BaseModel):

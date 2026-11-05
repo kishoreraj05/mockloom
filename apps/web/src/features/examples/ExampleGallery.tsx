@@ -6,7 +6,8 @@ import { useCreateWorkspace } from '@/api/hooks';
 import { CopyButton } from '@/components/CopyButton';
 import { MethodBadge } from '@/components/MethodBadge';
 import { Button } from '@/components/ui/button';
-import { curlCommand, type Example, EXAMPLES, exampleRules, exampleSpec, type Scenario } from '@/lib/examples';
+import { curlCommand } from '@/lib/snippets';
+import { type Example, EXAMPLES, exampleRules, exampleSpec, type Scenario } from '@/lib/examples';
 import { mockBaseUrl, plural, statusTone } from '@/lib/utils';
 import { useUi } from '@/store/ui';
 

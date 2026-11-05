@@ -4,22 +4,13 @@ import type { RouteDetail } from '@/api/client';
 import { CodeEditor } from '@/components/LazyCode';
 import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/fields';
+import { parameterSample } from '@/lib/rules';
 import { prettyJson, statusTone } from '@/lib/utils';
 import { type MockResponse, sendMockRequest } from './send';
 
 interface Row {
   name: string;
   value: string;
-}
-
-function exampleFor(schema: unknown): string {
-  const node = (schema ?? {}) as { type?: unknown; example?: unknown; enum?: unknown[]; minimum?: number };
-  if (node.example !== undefined) return String(node.example);
-  if (node.enum?.length) return String(node.enum[0]);
-  const type = Array.isArray(node.type) ? node.type[0] : node.type;
-  if (type === 'integer' || type === 'number') return String(node.minimum ?? 1);
-  if (type === 'boolean') return 'true';
-  return 'sample';
 }
 
 function Rows({
@@ -74,17 +65,17 @@ function Rows({
 export function TryIt({ slug, route }: { slug: string; route: RouteDetail }) {
   const pathParams = route.parameters.filter((p) => p.location === 'path');
   const [pathValues, setPathValues] = useState<Record<string, string>>(() =>
-    Object.fromEntries(pathParams.map((p) => [p.name, exampleFor(p.schema)])),
+    Object.fromEntries(pathParams.map((p) => [p.name, parameterSample(p)])),
   );
   const [query, setQuery] = useState<Row[]>(() =>
     route.parameters
       .filter((p) => p.location === 'query' && p.required)
-      .map((p) => ({ name: p.name, value: exampleFor(p.schema) })),
+      .map((p) => ({ name: p.name, value: parameterSample(p) })),
   );
   const [headers, setHeaders] = useState<Row[]>(() =>
     route.parameters
       .filter((p) => p.location === 'header' && p.required)
-      .map((p) => ({ name: p.name, value: exampleFor(p.schema) })),
+      .map((p) => ({ name: p.name, value: parameterSample(p) })),
   );
   const canHaveBody = !['GET', 'HEAD'].includes(route.method);
   const [body, setBody] = useState(() =>

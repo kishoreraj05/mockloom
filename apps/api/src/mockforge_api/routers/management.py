@@ -343,6 +343,7 @@ def route_detail(
                 location=p.location,
                 required=p.required,
                 schema=spec.context.resolve(p.schema) if p.schema is not None else None,
+                example=sample_body(spec, p.schema, workspace.seed, p.name) if p.schema is not None else None,
             )
             for p in route.params
         ],

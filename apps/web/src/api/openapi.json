@@ -1232,6 +1232,10 @@
           },
           "schema": {
             "title": "Schema"
+          },
+          "example": {
+            "title": "Example",
+            "description": "A dummy value that passes this parameter's validation."
           }
         },
         "type": "object",

@@ -3,7 +3,7 @@ import type { LogEntry } from '@/api/client';
 import { mergeRows } from '@/lib/log';
 import type { RuleDraft } from '@/lib/rules';
 
-export type EndpointTab = 'rules' | 'try' | 'chaos';
+export type EndpointTab = 'rules' | 'try' | 'use' | 'chaos';
 export type Connection = 'connecting' | 'live' | 'offline';
 
 interface Toast {

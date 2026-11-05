@@ -84,6 +84,28 @@ def test_every_listed_scenario_does_what_it_says(client, example):
     client.delete(f"/api/workspaces/{slug}")
 
 
+def test_sample_values_shown_for_every_route_pass_validation(client, example):
+    """The UI offers these as copy-paste requests, so none may be rejected by the mock's own validation."""
+    slug = f"samples-{example['id']}-{os.getpid()}"
+    client.post("/api/workspaces", json={"name": example["name"], "slug": slug, "spec_text": spec_text(example)})
+    for summary in client.get(f"/api/workspaces/{slug}/routes").json():
+        detail = client.get(f"/api/workspaces/{slug}/routes/detail", params={"key": summary["key"]}).json()
+        path, query, headers = detail["path"], {}, {}
+        for parameter in detail["parameters"]:
+            value = str(parameter["example"])
+            if parameter["location"] == "path":
+                path = path.replace("{" + parameter["name"] + "}", value)
+            elif parameter["required"] and parameter["location"] == "query":
+                query[parameter["name"]] = value
+            elif parameter["required"] and parameter["location"] == "header":
+                headers[parameter["name"]] = value
+        response = client.request(
+            detail["method"], f"/mock/{slug}{path}", params=query, headers=headers, json=detail["sample_body"]
+        )
+        assert response.status_code != 400, f"{summary['key']}: {response.text}"
+    client.delete(f"/api/workspaces/{slug}")
+
+
 def test_creating_with_a_bad_rule_creates_nothing(client, petstore_text):
     slug = f"atomic-{os.getpid()}"
     bad = {"name": "R", "route": "GET /nope", "then": {"status": 200}}

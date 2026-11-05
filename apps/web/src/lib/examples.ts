@@ -47,22 +47,3 @@ export function exampleRules(id: string): RuleIn[] {
     .sort()
     .map((path) => ruleFiles[path]);
 }
-
-function shellQuote(value: string): string {
-  return `'${value.replace(/'/g, `'\\''`)}'`;
-}
-
-/** A command that can be pasted into a terminal as is. */
-export function curlCommand(baseUrl: string, scenario: Scenario): string {
-  const query = new URLSearchParams(scenario.query ?? {}).toString();
-  const parts = ['curl', '-i'];
-  if (scenario.method !== 'GET') parts.push('-X', scenario.method);
-  parts.push(shellQuote(`${baseUrl}${scenario.path}${query ? `?${query}` : ''}`));
-  for (const [name, value] of Object.entries(scenario.headers ?? {})) {
-    parts.push('-H', shellQuote(`${name}: ${value}`));
-  }
-  if (scenario.body !== undefined) {
-    parts.push('-H', shellQuote('content-type: application/json'), '-d', shellQuote(JSON.stringify(scenario.body)));
-  }
-  return parts.join(' ');
-}

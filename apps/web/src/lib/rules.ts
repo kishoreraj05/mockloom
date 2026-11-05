@@ -245,8 +245,13 @@ export function draftFromLog(entry: LogEntry): RuleDraft {
   };
 }
 
-function sampleValue(schema: unknown): string {
-  const node = (schema ?? {}) as { type?: unknown; enum?: unknown[]; example?: unknown; minimum?: number };
+/** Text for a parameter. The server's example honours patterns and formats, so it passes validation. */
+export function parameterSample(parameter: { schema?: unknown; example?: unknown }): string {
+  const { example } = parameter;
+  if (Array.isArray(example)) return example.join(',');
+  if (typeof example === 'object' && example !== null) return JSON.stringify(example);
+  if (example !== undefined && example !== null) return String(example);
+  const node = (parameter.schema ?? {}) as { type?: unknown; enum?: unknown[]; example?: unknown; minimum?: number };
   if (node.example !== undefined) return String(node.example);
   if (Array.isArray(node.enum) && node.enum.length) return String(node.enum[0]);
   const type = Array.isArray(node.type) ? node.type[0] : node.type;
@@ -304,15 +309,19 @@ export function buildSampleRequest(route: RouteDetail, draft: Pick<RuleDraft, 'c
   const headers: Record<string, string> = {};
   const warnings: string[] = [];
   for (const parameter of route.parameters) {
-    if (parameter.location === 'path') pathValues[parameter.name] = sampleValue(parameter.schema);
-    else if (parameter.required && parameter.location === 'query') query[parameter.name] = sampleValue(parameter.schema);
-    else if (parameter.required && parameter.location === 'header') headers[parameter.name] = sampleValue(parameter.schema);
+    if (parameter.location === 'path') pathValues[parameter.name] = parameterSample(parameter);
+    else if (parameter.required && parameter.location === 'query') query[parameter.name] = parameterSample(parameter);
+    else if (parameter.required && parameter.location === 'header') headers[parameter.name] = parameterSample(parameter);
   }
   let body: unknown = route.sample_body ?? undefined;
 
   const rows = draft.conditions.filter((row) => row.field.trim());
-  for (const row of draft.mode === 'any' ? rows.slice(0, 1) : rows) {
+  // "Any" needs just one match, so use a condition we can actually satisfy from here.
+  const canSatisfy = (row: ConditionRow) => row.source !== 'cookie' && (row.op === 'missing' || satisfying(row) !== null);
+  const chosen = draft.mode === 'any' ? [rows.find(canSatisfy) ?? rows[0]].filter(Boolean) : rows;
+  for (const row of chosen) {
     if (row.op === 'missing') continue; // Satisfied by not sending it.
+    if (row.op === 'neq' && row.source === 'cookie') continue; // So is this.
     const value = satisfying(row);
     if (value === null) {
       warnings.push(`Can't build a value for ${row.field} (${row.op}); fill it in using Try it.`);

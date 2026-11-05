@@ -176,6 +176,34 @@ describe('buildSampleRequest', () => {
     expect(sample.warnings).toEqual([]);
   });
 
+  it('uses the example from the server, which fits patterns the schema asks for', () => {
+    const withExample = {
+      ...route,
+      parameters: [{ name: 'id', location: 'path', required: true, schema: { type: 'string' }, example: 'cus_ab12' }],
+    } as unknown as RouteDetail;
+    expect(buildSampleRequest(withExample, { mode: 'all', conditions: [] }).path).toBe('/pets/cus_ab12');
+  });
+
+  it('satisfies "cookie does not equal" by not sending the cookie', () => {
+    const sample = buildSampleRequest(route, {
+      mode: 'all',
+      conditions: [{ source: 'cookie', field: 'role', op: 'neq', value: 'admin' }],
+    });
+    expect(sample.warnings).toEqual([]);
+  });
+
+  it('in "any" mode, prefers a condition it can satisfy over a cookie', () => {
+    const sample = buildSampleRequest(route, {
+      mode: 'any',
+      conditions: [
+        { source: 'cookie', field: 'role', op: 'eq', value: 'admin' },
+        { source: 'header', field: 'x-admin', op: 'exists', value: '' },
+      ],
+    });
+    expect(sample.headers['x-admin']).toBe('present');
+    expect(sample.warnings).toEqual([]);
+  });
+
   it('only needs one condition in "any" mode', () => {
     const sample = buildSampleRequest(route, {
       mode: 'any',

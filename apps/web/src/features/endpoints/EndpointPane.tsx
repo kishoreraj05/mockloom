@@ -4,6 +4,11 @@ import { useRouteDetail } from '@/api/hooks';
 import { MethodBadge } from '@/components/MethodBadge';
 import { RouteChaos } from '@/features/chaos/ChaosBoard';
 import { RulesPanel } from '@/features/rules/RulesPanel';
+import { CopyButton } from '@/components/CopyButton';
+import { buildSampleRequest } from '@/lib/rules';
+import { absoluteUrl } from '@/lib/snippets';
+import { mockBaseUrl } from '@/lib/utils';
+import { UseInApp } from './UseInApp';
 import { TryIt } from '@/features/tryit/TryIt';
 import { type EndpointTab, useUi } from '@/store/ui';
 
@@ -33,6 +38,7 @@ export function EndpointPane({ slug, routeKey }: { slug: string; routeKey: strin
     );
   }
   const route = detail.data;
+  const url = absoluteUrl(mockBaseUrl(`/mock/${slug}`), buildSampleRequest(route, { mode: 'all', conditions: [] }));
 
   return (
     <Tabs.Root value={tab} onValueChange={(value) => setTab(value as EndpointTab)} className="flex h-full flex-col">
@@ -42,12 +48,21 @@ export function EndpointPane({ slug, routeKey }: { slug: string; routeKey: strin
           <h2 className="min-w-0 break-all font-mono text-[13px] font-medium">{route.path}</h2>
         </div>
         {route.summary && <p className="mt-0.5 text-xs text-muted">{route.summary}</p>}
+        <div className="mt-1 flex min-w-0 items-center gap-0.5">
+          <code data-testid="route-url" className="min-w-0 truncate font-mono text-xs text-muted" title={url}>
+            {url}
+          </code>
+          <CopyButton text={url} label="Copy API link" />
+        </div>
         <Tabs.List className="mt-1.5 flex" aria-label="Endpoint tools">
           <Tabs.Trigger value="rules" className={tabClass}>
             Rules{route.rule_count > 0 && ` (${route.rule_count})`}
           </Tabs.Trigger>
           <Tabs.Trigger value="try" className={tabClass}>
             Try it
+          </Tabs.Trigger>
+          <Tabs.Trigger value="use" className={tabClass}>
+            Use in your app
           </Tabs.Trigger>
           <Tabs.Trigger value="chaos" className={tabClass}>
             Chaos
@@ -59,6 +74,9 @@ export function EndpointPane({ slug, routeKey }: { slug: string; routeKey: strin
       </Tabs.Content>
       <Tabs.Content value="try" className="min-h-0 flex-1 overflow-y-auto">
         <TryIt key={route.key} slug={slug} route={route} />
+      </Tabs.Content>
+      <Tabs.Content value="use" className="min-h-0 flex-1 overflow-y-auto">
+        <UseInApp slug={slug} route={route} />
       </Tabs.Content>
       <Tabs.Content value="chaos" className="min-h-0 flex-1 overflow-y-auto">
         <RouteChaos slug={slug} routeKey={route.key} />

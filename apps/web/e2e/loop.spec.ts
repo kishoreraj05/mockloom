@@ -1,5 +1,5 @@
 import { expect, type Page, test } from '@playwright/test';
-import { createPetstore } from './helpers';
+import { createPetstore, mockUrlOf, openExample } from './helpers';
 
 async function openRoute(page: Page, path: string, method = 'GET') {
   const label = method === 'DELETE' ? 'DEL' : method;
@@ -171,12 +171,11 @@ test('examples: pick one from the list, test it, and come back to it', async ({ 
     await expect(gallery.getByRole('heading', { name })).toBeVisible();
   }
 
-  await gallery.getByRole('button', { name: 'Open the Payments API example' }).click();
-  await expect(page).toHaveURL(/\/w\/payments/);
+  await openExample(page, 'Payments API');
   await expect(page.getByRole('heading', { name: 'Payments API' })).toBeVisible();
 
   // Its rules came with it, and they work.
-  const mockUrl = await page.getByTestId('mock-url').textContent();
+  const mockUrl = await mockUrlOf(page);
   const declined = await request.post(`${mockUrl}/charges`, {
     data: { amount: 2500, currency: 'usd', source: 'tok_declined' },
   });
@@ -203,14 +202,13 @@ test('examples: pick one from the list, test it, and come back to it', async ({ 
 test('examples: the what-to-try list gives commands that work', async ({ page, request }) => {
   await page.goto('/');
   const gallery = page.getByRole('region', { name: 'Examples' });
-  await gallery.getByRole('button', { name: 'What to try' }).first().click();
+  await gallery.getByRole('button', { name: /What to try/ }).first().click();
   const list = gallery.getByRole('list', { name: 'Requests to try on Task Tracker' });
   await expect(list.getByText('An empty list')).toBeVisible();
   await expect(list.getByRole('button', { name: /Copy curl command/ })).toHaveCount(8);
 
-  await gallery.getByRole('button', { name: 'Open the Task Tracker example' }).click();
-  await expect(page).toHaveURL(/\/w\/task-tracker/);
-  const mockUrl = await page.getByTestId('mock-url').textContent();
+  await openExample(page, 'Task Tracker');
+  const mockUrl = await mockUrlOf(page);
   expect((await (await request.get(`${mockUrl}/tasks?status=done`)).json()).items).toEqual([]);
 });
 
@@ -223,4 +221,33 @@ test('examples: start from a spec, edit it, and save under your own name', async
   await page.getByLabel('Workspace name').fill('My team repo API');
   await page.getByRole('button', { name: 'Create mock server' }).click();
   await expect(page).toHaveURL(/\/w\/my-team-repo-api/);
+});
+
+test('use in your app: every route shows an absolute link and samples that really work', async ({ page, request }) => {
+  await openExample(page, 'Payments API');
+
+  // A path parameter with a pattern: the dummy value has to pass the mock's own validation.
+  await page.getByRole('button', { name: /^GET\s*\/customers\/\{customerId\}/ }).click();
+  const link = page.getByTestId('route-url');
+  await expect(link).toHaveText(/^http:\/\/.+\/mock\/payments\/customers\/cus_/);
+  expect((await request.get((await link.textContent())!)).status()).toBe(200);
+
+  await page.getByRole('tab', { name: 'Use in your app' }).click();
+  const panel = page.getByRole('tabpanel');
+  await expect(panel.getByRole('heading', { name: 'Example response' })).toBeVisible();
+  await expect(panel.getByTestId('snippet').first()).toContainText('curl');
+  await panel.getByRole('radio', { name: 'Python' }).first().click();
+  await expect(panel.getByTestId('snippet').first()).toContainText('import requests');
+  await panel.getByRole('radio', { name: 'JavaScript' }).first().click();
+  await expect(panel.getByTestId('snippet').first()).toContainText('await fetch(');
+
+  // Each rule gets its own request, and the request really triggers that rule.
+  await page.getByRole('button', { name: /^POST\s*\/charges/ }).click();
+  const declined = panel.getByRole('group', { name: 'To get: Card declined' });
+  await expect(declined).toContainText('402');
+  await expect(declined.getByTestId('snippet')).toContainText('tok_declined');
+  const response = await request.post(`${await mockUrlOf(page)}/charges`, {
+    data: { amount: 2500, currency: 'usd', source: 'tok_declined' },
+  });
+  expect(response.headers()['x-mockforge-rule']).toBe('Card declined');
 });

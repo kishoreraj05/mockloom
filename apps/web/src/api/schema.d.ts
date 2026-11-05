@@ -348,6 +348,11 @@ export interface components {
             required: boolean;
             /** Schema */
             schema?: unknown;
+            /**
+             * Example
+             * @description A dummy value that passes this parameter's validation.
+             */
+            example?: unknown;
         };
         /** ResponseOut */
         ResponseOut: {
