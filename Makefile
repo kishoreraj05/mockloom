@@ -5,6 +5,7 @@ PYTHON ?= python3.13
 
 setup:
 	$(PYTHON) -m venv .venv
+	.venv/bin/pip install --upgrade pip
 	.venv/bin/pip install -e packages/engine -e "apps/api[dev,postgres]"
 	cd apps/web && npm install
 
