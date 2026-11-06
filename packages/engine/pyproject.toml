@@ -3,6 +3,7 @@ name = "mockloom-engine"
 version = "0.1.0"
 description = "Turns an OpenAPI 3.x document into a rule-driven mock. Pure Python, no web framework."
 requires-python = ">=3.11"
+license = "Apache-2.0"
 dependencies = [
   "pydantic>=2.7,<3",
   "pyyaml>=6",

@@ -3,6 +3,7 @@ name = "mockloom-api"
 version = "0.1.0"
 description = "The MockLoom server: management API, mock endpoint and live request log."
 requires-python = ">=3.11"
+license = "Apache-2.0"
 dependencies = [
   "mockloom-engine",
   "fastapi>=0.115",

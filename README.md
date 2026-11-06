@@ -115,3 +115,7 @@ make gen          # after changing the API or rule models
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[Apache-2.0](LICENSE)
