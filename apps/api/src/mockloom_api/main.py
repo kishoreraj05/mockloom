@@ -14,7 +14,7 @@ from .routers import management, mock
 from .runtime import RuntimeManager
 from .settings import Settings
 
-logger = logging.getLogger("mockforge")
+logger = logging.getLogger("mockloom")
 
 
 class _AbortableConnections:
@@ -38,7 +38,7 @@ class _AbortableConnections:
                 transport.abort()
                 return True
 
-            scope["mockforge.abort"] = abort
+            scope["mockloom.abort"] = abort
         await self.app(scope, receive, send)
 
 
@@ -57,9 +57,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     sessions = session_factory(engine)
 
     app = FastAPI(
-        title="MockForge",
+        title="MockLoom",
         version="0.1.0",
-        summary="Management API for MockForge workspaces.",
+        summary="Management API for MockLoom workspaces.",
         lifespan=lifespan,
     )
     app.state.settings = settings

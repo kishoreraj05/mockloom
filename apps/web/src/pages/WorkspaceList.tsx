@@ -183,7 +183,7 @@ export function WorkspaceListPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-xl font-semibold tracking-tight">MockForge</h1>
+        <h1 className="text-xl font-semibold tracking-tight">MockLoom</h1>
         <p className="mt-1 text-muted">Upload a spec, get a live mock server, and shape its responses with rules.</p>
       </header>
 

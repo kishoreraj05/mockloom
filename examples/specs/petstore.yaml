@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Petstore
   version: 1.0.0
-  description: The example spec used by MockForge's docs and tests.
+  description: The example spec used by MockLoom's docs and tests.
 tags:
   - name: pets
   - name: store

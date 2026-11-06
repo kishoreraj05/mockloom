@@ -13,7 +13,7 @@ export default defineConfig({
   },
   webServer: {
     // Serves the built app. A fresh database per run keeps the tests independent.
-    command: `rm -f .e2e.db .e2e.db-shm .e2e.db-wal && MOCKFORGE_DATABASE_URL=sqlite:///./.e2e.db ../../.venv/bin/uvicorn mockforge_api.asgi:app --port ${port} --log-level warning`,
+    command: `rm -f .e2e.db .e2e.db-shm .e2e.db-wal && MOCKLOOM_DATABASE_URL=sqlite:///./.e2e.db ../../.venv/bin/uvicorn mockloom_api.asgi:app --port ${port} --log-level warning`,
     url: `http://127.0.0.1:${port}/api/workspaces`,
     reuseExistingServer: false,
   },

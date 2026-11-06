@@ -6,8 +6,8 @@ import datetime as dt
 import re
 from typing import Annotated, Any, Literal
 
-from mockforge_engine.limits import MAX_DELAY_MS
-from mockforge_engine.rules import Then, When
+from mockloom_engine.limits import MAX_DELAY_MS
+from mockloom_engine.rules import Then, When
 from pydantic import BaseModel, Field, field_validator
 
 _SLUG = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")

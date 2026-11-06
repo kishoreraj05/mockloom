@@ -285,7 +285,7 @@ class TestMockHttp:
         from dataclasses import replace
 
         from fastapi.testclient import TestClient
-        from mockforge_api.main import create_app
+        from mockloom_api.main import create_app
 
         limited = replace(settings, rate_limit_per_minute=2)
         with TestClient(create_app(limited)) as client:

@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 
 import pytest
-from mockforge_engine import Rule
-from mockforge_engine.rules import CompiledRule, RequestView
+from mockloom_engine import Rule
+from mockloom_engine.rules import CompiledRule, RequestView
 from pydantic import ValidationError
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -115,7 +115,7 @@ def test_example_rules_are_valid():
 
 
 def test_published_schema_is_current():
-    from mockforge_engine import rule_json_schema
+    from mockloom_engine import rule_json_schema
 
     published = json.loads((ROOT / "packages" / "engine" / "rule.schema.json").read_text())
     assert published == json.loads(json.dumps(rule_json_schema()))

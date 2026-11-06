@@ -11,14 +11,14 @@ setup:
 
 # Run these two in separate terminals, then open http://localhost:5173
 dev-api:
-	.venv/bin/uvicorn mockforge_api.asgi:app --reload --port 8000
+	.venv/bin/uvicorn mockloom_api.asgi:app --reload --port 8000
 dev-web:
 	cd apps/web && npm run dev
 
 # One server, on http://localhost:8000, serving the built app.
 serve:
 	cd apps/web && npm run build
-	.venv/bin/uvicorn mockforge_api.asgi:app --port 8000
+	.venv/bin/uvicorn mockloom_api.asgi:app --port 8000
 
 test:
 	.venv/bin/pytest packages/engine/tests apps/api/tests

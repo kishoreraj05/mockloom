@@ -8,16 +8,16 @@ from pathlib import Path
 @dataclass(frozen=True)
 class Settings:
     database_url: str = field(
-        default_factory=lambda: os.getenv("MOCKFORGE_DATABASE_URL", "sqlite:///./mockforge.db")
+        default_factory=lambda: os.getenv("MOCKLOOM_DATABASE_URL", "sqlite:///./mockloom.db")
     )
     # 0 disables it. Meant for the public hosted demo; a local install has no need for it.
     rate_limit_per_minute: int = field(
-        default_factory=lambda: int(os.getenv("MOCKFORGE_RATE_LIMIT_PER_MINUTE", "0"))
+        default_factory=lambda: int(os.getenv("MOCKLOOM_RATE_LIMIT_PER_MINUTE", "0"))
     )
     web_dist: Path = field(
         default_factory=lambda: Path(
             os.getenv(
-                "MOCKFORGE_WEB_DIST", Path(__file__).resolve().parents[3] / "web" / "dist"
+                "MOCKLOOM_WEB_DIST", Path(__file__).resolve().parents[3] / "web" / "dist"
             )
         )
     )

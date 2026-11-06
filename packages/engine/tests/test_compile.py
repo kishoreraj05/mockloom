@@ -1,8 +1,8 @@
 import json
 
 import pytest
-from mockforge_engine import SpecError, compile_spec, validate_text
-from mockforge_engine.loader import parse_document
+from mockloom_engine import SpecError, compile_spec, validate_text
+from mockloom_engine.loader import parse_document
 
 
 def minimal(paths="{}", version="3.0.3", extra=""):

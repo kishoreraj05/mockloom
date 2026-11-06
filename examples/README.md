@@ -1,6 +1,6 @@
 # Examples
 
-Ready-made workspaces to try MockForge with, and to copy from. They are listed on the home page,
+Ready-made workspaces to try MockLoom with, and to copy from. They are listed on the home page,
 where **Open example** creates the workspace with its rules, and **Start from this spec** loads the
 spec into the form so you can edit it first.
 

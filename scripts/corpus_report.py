@@ -11,9 +11,9 @@ import time
 from pathlib import Path
 
 from jsonschema import Draft202012Validator  # noqa: F401
-from mockforge_engine import compile_spec, validate_text
-from mockforge_engine.generator import Generator
-from mockforge_engine.schema import collect_errors
+from mockloom_engine import compile_spec, validate_text
+from mockloom_engine.generator import Generator
+from mockloom_engine.schema import collect_errors
 
 sys.path.insert(0, str(Path(__file__).parent))
 from fetch_corpus import MANIFEST, SPECS, filename  # noqa: E402

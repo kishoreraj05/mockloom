@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "mockforge",
+      "name": "mockloom",
       "runtimeExecutable": "/usr/bin/env",
-      "runtimeArgs": ["MOCKFORGE_DATABASE_URL=sqlite:///./.preview.db", ".venv/bin/uvicorn", "mockforge_api.asgi:app", "--port", "18800", "--log-level", "warning"],
+      "runtimeArgs": ["MOCKLOOM_DATABASE_URL=sqlite:///./.preview.db", ".venv/bin/uvicorn", "mockloom_api.asgi:app", "--port", "18800", "--log-level", "warning"],
       "port": 18800
     }
   ]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Measure mock overhead over real HTTP. Plan target: under 10 ms p95 per request.
 
-Compares each scenario with a bare endpoint on the same server, so the figure is what MockForge
+Compares each scenario with a bare endpoint on the same server, so the figure is what MockLoom
 adds, not the cost of HTTP itself.
 """
 
@@ -20,8 +20,8 @@ from pathlib import Path
 import httpx
 import uvicorn
 from fastapi import Response
-from mockforge_api.main import create_app
-from mockforge_api.settings import Settings
+from mockloom_api.main import create_app
+from mockloom_api.settings import Settings
 
 ROOT = Path(__file__).resolve().parent.parent
 REQUESTS = 2000

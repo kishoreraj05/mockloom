@@ -25,7 +25,7 @@ function useTheme(): string {
     media.addEventListener('change', listener);
     return () => media.removeEventListener('change', listener);
   }, []);
-  return dark ? 'forge-dark' : 'forge-light';
+  return dark ? 'loom-dark' : 'loom-light';
 }
 
 export interface Marker {
@@ -56,7 +56,7 @@ export default function CodeEditor({
   ariaLabel: string;
 }) {
   const theme = useTheme();
-  const uri = path ? monaco.Uri.parse(`inmemory://forge/${path}`).toString() : undefined;
+  const uri = path ? monaco.Uri.parse(`inmemory://loom/${path}`).toString() : undefined;
 
   useEffect(() => {
     if (language !== 'json' || !uri) return;
@@ -75,7 +75,7 @@ export default function CodeEditor({
     if (!model) return;
     monaco.editor.setModelMarkers(
       model,
-      'mockforge',
+      'mockloom',
       (markers ?? []).map((marker) => ({
         startLineNumber: marker.line,
         endLineNumber: marker.line,

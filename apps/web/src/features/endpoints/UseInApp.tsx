@@ -121,7 +121,7 @@ export function UseInApp({ slug, route }: { slug: string; route: RouteDetail }) 
           <Heading>Example request for each rule</Heading>
           <p className="mb-2 text-2xs text-muted">
             Each one meets its rule's conditions. If it also meets a rule with a lower priority number, that rule answers
-            instead; the <code className="font-mono">x-mockforge-rule</code> response header tells you which one did.
+            instead; the <code className="font-mono">x-mockloom-rule</code> response header tells you which one did.
           </p>
           <div className="space-y-3">
             {mine.map((rule) => {

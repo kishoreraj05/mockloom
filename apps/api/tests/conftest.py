@@ -8,16 +8,16 @@ from pathlib import Path
 import pytest
 import uvicorn
 from fastapi.testclient import TestClient
-from mockforge_api.main import create_app
-from mockforge_api.settings import Settings
+from mockloom_api.main import create_app
+from mockloom_api.settings import Settings
 
 ROOT = Path(__file__).resolve().parents[3]
 
 
 @pytest.fixture
 def settings(tmp_path):
-    # MOCKFORGE_TEST_DATABASE_URL points the same suite at Postgres in CI.
-    url = os.getenv("MOCKFORGE_TEST_DATABASE_URL") or f"sqlite:///{tmp_path}/test.db"
+    # MOCKLOOM_TEST_DATABASE_URL points the same suite at Postgres in CI.
+    url = os.getenv("MOCKLOOM_TEST_DATABASE_URL") or f"sqlite:///{tmp_path}/test.db"
     return Settings(database_url=url, web_dist=tmp_path / "no-dist", log_flush_seconds=0.02)
 
 

@@ -41,9 +41,9 @@ export async function sendMockRequest(slug: string, request: MockRequest): Promi
     status: response.status,
     statusText: response.statusText,
     ms: Math.round(performance.now() - started),
-    rule: response.headers.get('x-mockforge-rule'),
-    source: response.headers.get('x-mockforge-source'),
-    headers: [...response.headers.entries()].filter(([name]) => !name.startsWith('x-mockforge-')),
+    rule: response.headers.get('x-mockloom-rule'),
+    source: response.headers.get('x-mockloom-source'),
+    headers: [...response.headers.entries()].filter(([name]) => !name.startsWith('x-mockloom-')),
     body: text,
   };
 }

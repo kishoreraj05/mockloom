@@ -28,7 +28,7 @@ def test_upload_mock_rule_log(client, petstore_text):
 
     response = client.get(url, params={"status": "empty"})
     assert response.json() == {"items": [], "total": 0}
-    assert response.headers["x-mockforge-rule"] == "Empty"
+    assert response.headers["x-mockloom-rule"] == "Empty"
 
     logs = client.get(f"/api/workspaces/{slug}/logs").json()
     assert [entry["rule_name"] for entry in logs] == [None, "Empty"]
@@ -60,7 +60,7 @@ def test_websocket_refuses_other_origins(client, workspace):
 
 def test_logs_reach_the_database_and_survive_restart(settings, petstore_text):
     from fastapi.testclient import TestClient
-    from mockforge_api.main import create_app
+    from mockloom_api.main import create_app
 
     with TestClient(create_app(settings)) as first:
         slug = first.post(
@@ -81,7 +81,7 @@ def test_offline_really_drops_the_connection(settings, petstore_text):
     import httpx
     import pytest
     from fastapi.testclient import TestClient
-    from mockforge_api.main import create_app
+    from mockloom_api.main import create_app
 
     from .conftest import serve
 
@@ -113,7 +113,7 @@ def test_paging_back_past_the_ring_buffer(settings, petstore_text):
     from dataclasses import replace
 
     from fastapi.testclient import TestClient
-    from mockforge_api.main import create_app
+    from mockloom_api.main import create_app
 
     slug = f"paging-{time.time_ns()}"
     with TestClient(create_app(replace(settings, log_ring_size=5))) as client:
@@ -139,7 +139,7 @@ def test_workspaces_with_the_same_name_created_at_once_all_succeed(settings):
 
     import httpx
     from fastapi.testclient import TestClient
-    from mockforge_api.main import create_app
+    from mockloom_api.main import create_app
 
     from .conftest import serve
 

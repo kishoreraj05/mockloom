@@ -11,7 +11,7 @@ import threading
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from mockforge_engine import ChaosConfig, CompiledSpec, MockEngine, Rule, compile_spec
+from mockloom_engine import ChaosConfig, CompiledSpec, MockEngine, Rule, compile_spec
 from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker

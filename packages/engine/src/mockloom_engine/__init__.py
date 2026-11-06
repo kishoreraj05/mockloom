@@ -1,4 +1,4 @@
-"""MockForge engine: compile an OpenAPI 3.x document and answer requests from it."""
+"""MockLoom engine: compile an OpenAPI 3.x document and answer requests from it."""
 
 from .compiler import CompiledRoute, CompiledSpec, ValidationReport, compile_spec, validate_text
 from .generator import Generator

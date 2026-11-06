@@ -4,7 +4,7 @@
 import json
 from pathlib import Path
 
-from mockforge_engine import rule_json_schema
+from mockloom_engine import rule_json_schema
 
 target = Path(__file__).resolve().parent.parent / "packages" / "engine" / "rule.schema.json"
 target.write_text(json.dumps(rule_json_schema(), indent=2) + "\n")

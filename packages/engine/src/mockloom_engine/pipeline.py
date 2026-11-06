@@ -251,7 +251,7 @@ class MockEngine:
                 code = _status_int(wanted)
                 if code in _NO_BODY:
                     return code, {}, b"", "generated"
-                headers, body = _problem(code, f"Status {code}", "Injected by MockForge.")
+                headers, body = _problem(code, f"Status {code}", "Injected by MockLoom.")
                 return code, headers, body, "generated"
         if status is None:
             return 200, {}, b"", "generated"
@@ -343,7 +343,7 @@ class MockEngine:
         if route is not None:
             code, headers, body, _ = self._build(route, raw.path, str(status), raw.headers.get("accept", ""))
         else:
-            headers, body = _problem(status, f"Status {status}", "Injected by MockForge.")
+            headers, body = _problem(status, f"Status {status}", "Injected by MockLoom.")
             code = status
         result.status, result.headers, result.body = code, headers, body
         result.source = "chaos"

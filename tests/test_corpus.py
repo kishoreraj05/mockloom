@@ -6,9 +6,9 @@ import sys
 from pathlib import Path
 
 import pytest
-from mockforge_engine import MockEngine, RawRequest, compile_spec, validate_text
-from mockforge_engine.generator import Generator
-from mockforge_engine.schema import collect_errors
+from mockloom_engine import MockEngine, RawRequest, compile_spec, validate_text
+from mockloom_engine.generator import Generator
+from mockloom_engine.schema import collect_errors
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))

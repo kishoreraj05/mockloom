@@ -36,7 +36,7 @@ TARGET_31 = 15
 
 
 def get(url: str, limit: int = MAX_BYTES + 1) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "mockforge-corpus-fetch"})
+    request = urllib.request.Request(url, headers={"User-Agent": "mockloom-corpus-fetch"})
     with urllib.request.urlopen(request, timeout=60) as response:  # noqa: S310 - fixed sources
         return response.read(limit)
 

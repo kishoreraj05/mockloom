@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from .models import RequestLog, Workspace
 from .settings import Settings
 
-logger = logging.getLogger("mockforge.logs")
+logger = logging.getLogger("mockloom.logs")
 _MAX_PENDING = 50_000
 _SUBSCRIBER_QUEUE = 2_000
 

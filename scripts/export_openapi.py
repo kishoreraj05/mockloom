@@ -7,8 +7,8 @@ import tempfile
 from pathlib import Path
 
 with tempfile.TemporaryDirectory() as directory:
-    os.environ["MOCKFORGE_DATABASE_URL"] = f"sqlite:///{directory}/export.db"
-    from mockforge_api.main import create_app
+    os.environ["MOCKLOOM_DATABASE_URL"] = f"sqlite:///{directory}/export.db"
+    from mockloom_api.main import create_app
 
     document = create_app().openapi()
 

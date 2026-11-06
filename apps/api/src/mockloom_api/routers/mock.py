@@ -11,8 +11,8 @@ from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Request, Response
-from mockforge_engine import RawRequest
-from mockforge_engine.limits import MAX_REQUEST_BYTES
+from mockloom_engine import RawRequest
+from mockloom_engine.limits import MAX_REQUEST_BYTES
 from starlette.convertors import PathConvertor, register_url_convertor
 
 router = APIRouter()
@@ -30,7 +30,7 @@ register_url_convertor("mockpath", _AnyPath())
 _METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD", "TRACE"]
 _REDACTED_HEADERS = {"authorization", "proxy-authorization", "cookie", "x-api-key"}
 _LOGGED_BODY_BYTES = 64 * 1024
-_EXPOSED = "x-mockforge-rule, x-mockforge-source, x-mockforge-request-id"
+_EXPOSED = "x-mockloom-rule, x-mockloom-source, x-mockloom-request-id"
 
 
 class _RateLimiter:
@@ -195,7 +195,7 @@ async def serve_mock(request: Request, workspace: str, path: str = "") -> Respon
         state.logs.record(
             _entry(runtime.workspace_id, raw, query_string, result, duration_ms, overhead_ms, 0)
         )
-        abort = request.scope.get("mockforge.abort")
+        abort = request.scope.get("mockloom.abort")
         if abort is not None and abort():
             return Response(status_code=503)
         # Not running under a server whose socket we can reach: the closest thing to offline.
@@ -213,9 +213,9 @@ async def serve_mock(request: Request, workspace: str, path: str = "") -> Respon
     for name, value in result.headers.items():
         response.headers[name] = value
     response.headers.update(cors)
-    response.headers["x-mockforge-request-id"] = entry["id"]
-    response.headers["x-mockforge-source"] = result.source
+    response.headers["x-mockloom-request-id"] = entry["id"]
+    response.headers["x-mockloom-source"] = result.source
     if result.rule_name:
         # Header values are latin-1 on the wire; a rule name may not be.
-        response.headers["x-mockforge-rule"] = result.rule_name.encode("ascii", "replace").decode()
+        response.headers["x-mockloom-rule"] = result.rule_name.encode("ascii", "replace").decode()
     return response

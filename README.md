@@ -1,9 +1,7 @@
-# MockForge
+# MockLoom
 
 Upload an OpenAPI 3.x spec and get a live mock server, with no code. Responses change based on the
 request, so you can test empty lists, validation errors and paywalls before the real backend exists.
-
-> **MockForge is a placeholder name.** It is already taken on PyPI and npm, so it will change before release.
 
 ## Run it
 
@@ -76,9 +74,9 @@ tests/corpus      Manifest of 57 public specs. The specs themselves are download
 
 | Variable | Default | |
 |---|---|---|
-| `MOCKFORGE_DATABASE_URL` | `sqlite:///./mockforge.db` | For Postgres: `postgresql+psycopg://user:pass@host/db`, with the `postgres` extra installed. |
-| `MOCKFORGE_RATE_LIMIT_PER_MINUTE` | `0` (off) | Per workspace. For public deployments. |
-| `MOCKFORGE_WEB_DIST` | `apps/web/dist` | Where the built frontend is. |
+| `MOCKLOOM_DATABASE_URL` | `sqlite:///./mockloom.db` | For Postgres: `postgresql+psycopg://user:pass@host/db`, with the `postgres` extra installed. |
+| `MOCKLOOM_RATE_LIMIT_PER_MINUTE` | `0` (off) | Per workspace. For public deployments. |
+| `MOCKLOOM_WEB_DIST` | `apps/web/dist` | Where the built frontend is. |
 
 **Run one server process.** Compiled specs, rules and the log stream are held in memory, so extra workers would
 serve stale rules.

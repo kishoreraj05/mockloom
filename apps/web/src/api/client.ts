@@ -40,7 +40,7 @@ function toApiError(error: unknown): ApiError {
     const shaped = detail as { title?: string; issues?: SpecIssue[] };
     return new ApiError(shaped.issues?.[0]?.message ?? shaped.title ?? 'Request failed', shaped.issues ?? []);
   }
-  return new ApiError('Could not reach the MockForge server.');
+  return new ApiError('Could not reach the MockLoom server.');
 }
 
 /** Unwraps openapi-fetch's {data, error} so that callers (and TanStack Query) get exceptions. */

@@ -2,8 +2,8 @@ import json
 import random
 
 import pytest
-from mockforge_engine import Generator, compile_spec
-from mockforge_engine.schema import collect_errors
+from mockloom_engine import Generator, compile_spec
+from mockloom_engine.schema import collect_errors
 
 
 def spec_with(schemas: dict):
@@ -151,7 +151,7 @@ def test_allof_with_nullable_keeps_the_real_type():
         }
     )
     spec = compile_spec(text)
-    from mockforge_engine.schema import normalize_30
+    from mockloom_engine.schema import normalize_30
 
     schema = normalize_30({"allOf": [{"nullable": True}, {"$ref": "#/components/schemas/L"}]})
     assert isinstance(Generator(spec.context, random.Random(1)).generate(schema), int)

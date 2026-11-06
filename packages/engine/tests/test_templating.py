@@ -1,6 +1,6 @@
 import pytest
 from faker import Faker
-from mockforge_engine.templating import TemplateError, check_templates, render, template_context
+from mockloom_engine.templating import TemplateError, check_templates, render, template_context
 
 
 def ctx(**request):

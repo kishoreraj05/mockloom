@@ -6,8 +6,8 @@ import random
 from pathlib import Path
 
 import pytest
-from mockforge_engine import Generator, Rule, validate_text
-from mockforge_engine.schema import collect_errors
+from mockloom_engine import Generator, Rule, validate_text
+from mockloom_engine.schema import collect_errors
 
 ROOT = Path(__file__).resolve().parents[3] / "examples"
 CATALOG = json.loads((ROOT / "catalog.json").read_text())
@@ -78,7 +78,7 @@ def test_every_listed_scenario_does_what_it_says(client, example):
         )
         label = scenario["label"]
         assert response.status_code == scenario["expect_status"], f"{label}: {response.text}"
-        assert response.headers.get("x-mockforge-rule") == scenario["expect_rule"], label
+        assert response.headers.get("x-mockloom-rule") == scenario["expect_rule"], label
         rules_seen.add(scenario["expect_rule"])
     assert len(rules_seen) >= 3  # The list has to actually demonstrate rules.
     client.delete(f"/api/workspaces/{slug}")

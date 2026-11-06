@@ -11,13 +11,13 @@ self.MonacoEnvironment = {
   getWorker: (_id, label) => (label === 'json' ? new JsonWorker() : new EditorWorker()),
 };
 
-monaco.editor.defineTheme('forge-light', {
+monaco.editor.defineTheme('loom-light', {
   base: 'vs',
   inherit: true,
   rules: [],
   colors: { 'editor.background': '#ffffff', 'editorLineNumber.foreground': '#a8a397' },
 });
-monaco.editor.defineTheme('forge-dark', {
+monaco.editor.defineTheme('loom-dark', {
   base: 'vs-dark',
   inherit: true,
   rules: [],

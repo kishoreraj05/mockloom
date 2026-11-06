@@ -1,6 +1,6 @@
 from alembic import context
-from mockforge_api.db import build_engine
-from mockforge_api.models import Base
+from mockloom_api.db import build_engine
+from mockloom_api.models import Base
 
 url = context.config.get_main_option("sqlalchemy.url")
 

@@ -38,7 +38,7 @@ test('MVP loop: upload a spec, get a URL, add a rule, watch the log change', asy
 
   // The next request uses the rule, and the log says so.
   const matched = await request.get(`${mockUrl}/pets?status=empty`);
-  expect(matched.headers()['x-mockforge-rule']).toBe('Empty list');
+  expect(matched.headers()['x-mockloom-rule']).toBe('Empty list');
   await expect(log.getByRole('button', { name: /status=empty/ }).last()).toContainText('Empty list');
 });
 
@@ -85,7 +85,7 @@ test('create a rule from a logged request', async ({ page, request }) => {
   await expect(page.getByLabel('Rule name')).toHaveValue(/id=5/);
   await page.getByRole('button', { name: 'Save rule' }).click();
   await expect(page.getByRole('list', { name: 'Rules for this route' })).toBeVisible();
-  expect((await request.get(`${mockUrl}/pets/5`)).headers()['x-mockforge-rule']).toContain('id=5');
+  expect((await request.get(`${mockUrl}/pets/5`)).headers()['x-mockloom-rule']).toContain('id=5');
 });
 
 test('chaos: forced status and offline, then back to normal', async ({ page, request }) => {
@@ -180,7 +180,7 @@ test('examples: pick one from the list, test it, and come back to it', async ({ 
     data: { amount: 2500, currency: 'usd', source: 'tok_declined' },
   });
   expect(declined.status()).toBe(402);
-  expect(declined.headers()['x-mockforge-rule']).toBe('Card declined');
+  expect(declined.headers()['x-mockloom-rule']).toBe('Card declined');
 
   // A rule that wants something absent says so, and turning it off and on doesn't change its meaning.
   const rules = page.getByRole('list', { name: 'Rules for this route' });
@@ -249,5 +249,5 @@ test('use in your app: every route shows an absolute link and samples that reall
   const response = await request.post(`${await mockUrlOf(page)}/charges`, {
     data: { amount: 2500, currency: 'usd', source: 'tok_declined' },
   });
-  expect(response.headers()['x-mockforge-rule']).toBe('Card declined');
+  expect(response.headers()['x-mockloom-rule']).toBe('Card declined');
 });

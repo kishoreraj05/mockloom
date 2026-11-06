@@ -12,8 +12,8 @@ import yaml
 from fastapi.testclient import TestClient
 from hypothesis import HealthCheck
 from hypothesis import settings as hypothesis_settings
-from mockforge_api.main import create_app
-from mockforge_api.settings import Settings
+from mockloom_api.main import create_app
+from mockloom_api.settings import Settings
 from schemathesis.checks import not_a_server_error
 from schemathesis.specs.openapi.checks import (
     content_type_conformance,
