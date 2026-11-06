@@ -105,8 +105,11 @@ test('chaos: forced status and offline, then back to normal', async ({ page, req
     .toBe('dropped');
   await expect(page.getByRole('list', { name: 'Request log' }).getByText('drop').first()).toBeVisible();
 
+  // Until the reset lands, requests are still dropped, and that's a retry rather than a failure.
   await global.getByRole('button', { name: 'Reset' }).click();
-  await expect.poll(async () => (await request.get(`${mockUrl}/pets`)).status()).toBe(200);
+  await expect
+    .poll(async () => request.get(`${mockUrl}/pets`).then((response) => response.status(), () => 'dropped'))
+    .toBe(200);
 });
 
 test('spec editing: bad specs are flagged, a dropped route orphans its rules', async ({ page, request }) => {
