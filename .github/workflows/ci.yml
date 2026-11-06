@@ -98,3 +98,19 @@ jobs:
         with:
           name: playwright-traces
           path: apps/web/test-results
+
+  image:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t mockloom:ci .
+      - name: Serve an example from the image
+        run: |
+          docker run -d --name mockloom -p 127.0.0.1:8000:8000 mockloom:ci
+          timeout 60 sh -c 'until curl -sf http://127.0.0.1:8000/api/workspaces >/dev/null; do sleep 1; done'
+          python3 -c "import json; print(json.dumps({'name': 'Tasks', 'slug': 'tasks', 'spec_text': open('examples/specs/task-tracker.yaml').read()}))" \
+            | curl -sf -X POST http://127.0.0.1:8000/api/workspaces -H 'content-type: application/json' -d @-
+          curl -sf http://127.0.0.1:8000/mock/tasks/tasks
+          curl -sf http://127.0.0.1:8000/ | grep -q '<div id="root">'
+

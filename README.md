@@ -5,11 +5,14 @@ request, so you can test empty lists, validation errors and paywalls before the 
 
 ## Run it
 
-Needs Python 3.11 to 3.13 and Node 22 or newer.
+You only need Docker:
 
 ```bash
-make setup
-make serve
+docker build -t mockloom .
+```
+
+```bash
+docker run -p 127.0.0.1:8000:8000 -v mockloom-data:/data mockloom
 ```
 
 Open <http://localhost:8000>, find **Task Tracker** under **Examples**, and choose **Open example**. Your mock is live:
@@ -19,6 +22,12 @@ curl "http://localhost:8000/mock/task-tracker/tasks?status=done"
 ```
 
 There are four [examples](examples) to try and copy from, each with ready-made rules and a list of requests to send.
+
+Your workspaces are kept in the `mockloom-data` volume. The command only accepts connections from your own computer,
+because [there is no authentication yet](#configuration). To use Postgres instead, add
+`-e MOCKLOOM_DATABASE_URL=postgresql+psycopg://user:pass@host/db`.
+
+**From source:** with Python 3.11 to 3.13 and Node 22 or newer, run `make setup` and then `make serve`.
 
 ## What it does
 
